@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-labelledby="title desc">
+  <title id="title">ATDF 2026</title>
+  <desc id="desc">Circular green Africa Trade Development Forum 2026 seal</desc>
+  <g fill="none" stroke="#61c343" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="160" cy="90" r="76" stroke-width="5"/>
+    <circle cx="160" cy="90" r="68" stroke-width="1.8" opacity=".65"/>
+    <path d="M112 61c27-17 69-17 96 0M112 119c27 17 69 17 96 0" stroke-width="2" opacity=".72"/>
+    <path d="M121 112c-9-8-14-17-16-27m7 24-10-3m15-3-11-7m8-3-11-8m9-2-10-9m99 38c9-8 14-17 16-27m-7 24 10-3m-15-3 11-7m-8-3 11-8m-9-2 10-9" stroke-width="3"/>
+    <path d="M143 113c11-7 23-7 34 0v9c-11-6-23-6-34 0zm17-12v20" stroke-width="2.5"/>
+  </g>
+  <g fill="#61c343" font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="160" y="82" font-size="31" font-weight="900" letter-spacing="4">ATDF</text>
+    <text x="160" y="105" font-size="19" font-weight="800" letter-spacing="2">2026</text>
+  </g>
+</svg>

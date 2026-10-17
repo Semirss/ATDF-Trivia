@@ -1,0 +1,43 @@
+Q: Which planet is known as the red planet?
+A: Mars
+B: Venus
+C: Jupiter
+D: Mercury
+Answer: A
+Difficulty: Easy
+Explanation: Mars is called the red planet because iron oxide on its surface gives it a reddish color.
+Amharic Question: የቀይ ፕላኔት ተብሎ የሚታወቀው ፕላኔት የትኛው ነው?
+Amharic A: ማርስ
+Amharic B: ቬነስ
+Amharic C: ጁፒተር
+Amharic D: መርኩሪ
+Amharic Explanation: በመሬቱ ላይ ያለው የብረት ኦክሳይድ ቀይ ቀለም ስለሚሰጠው ማርስ ቀይ ፕላኔት ይባላል።
+
+Q: Which statement best explains why tides happen?
+A: Winds push ocean water toward shore
+B: Earth's rotation heats ocean currents
+C: Gravity from the Moon and Sun pulls on ocean water
+D: Rainfall raises and lowers sea levels
+Answer: C
+Difficulty: Medium
+Explanation: Tides are mainly caused by the Moon's gravity, with help from the Sun's gravity.
+
+Q: In a circuit with fixed voltage, what happens to current if resistance doubles?
+A: It doubles
+B: It is halved
+C: It stays the same
+D: It becomes zero
+Answer: B
+Difficulty: Hard
+Explanation: Ohm's law says current equals voltage divided by resistance, so doubling resistance halves current.
+
+Pipe format:
+Question | Option A | Option B | Option C | Option D | Answer | Difficulty | Explanation | Amharic Question | Amharic A | Amharic B | Amharic C | Amharic D | Amharic Explanation
+
+Rules:
+1. For True/False questions, leave Option C and Option D empty.
+2. In category bulk imports (100 questions per file), the default difficulty split is:
+   - Levels 1–5: Easy
+   - Levels 6–15: Medium
+   - Levels 16–20: Hard
+3. Do not alter the question structure; follow the exact format above.
