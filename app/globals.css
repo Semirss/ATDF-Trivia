@@ -1620,7 +1620,8 @@ html[data-telegram-webapp="true"] .play-intro-scene.launch-sequence {
 }
 
 .launch-event-art {
-  object-fit: cover;
+  z-index: 1;
+  object-fit: fill;
   object-position: center;
 }
 
