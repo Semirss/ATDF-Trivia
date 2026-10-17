@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, Lightbulb, ShieldCheck } from "lucide-react";
 import { CategoryCard } from "@/components/game/CategoryCard";
@@ -12,7 +12,6 @@ import { PartnerLogoStrip } from "@/components/game/PartnerLogoStrip";
 import { PlayIntroScene } from "@/components/game/PlayIntroScene";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { useCategories } from "@/hooks/useCategories";
-import { markHomeSplashSeen, shouldShowHomeSplash } from "@/lib/home-splash";
 import { t } from "@/lib/i18n";
 import { syncTelegramPlayerFromWebApp } from "@/lib/telegram-player";
 import { isTelegramMiniApp } from "@/lib/telegram-webapp";
@@ -52,16 +51,11 @@ export default function HomePage() {
   const completionPercent = totalLevels > 0 ? Math.min(100, Math.round((completedLevels / totalLevels) * 100)) : 0;
   const displayName = name?.trim().split(/\s+/)[0] || t(language, "newChallenger");
 
-  useEffect(() => {
-    setShowIntro(shouldShowHomeSplash());
-  }, []);
-
   if (showIntro) {
     return (
       <PlayIntroScene
         isLoading={isIntroLoading}
         onPlay={async () => {
-          markHomeSplashSeen();
           if (!usePlayerStore.getState().isLoaded) {
             await new Promise<void>((resolve) => {
               const timeout = setTimeout(resolve, 500);

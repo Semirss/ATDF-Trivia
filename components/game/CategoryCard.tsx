@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, type CSSProperties } from "react";
 import { motion } from "framer-motion";
-import { BarChart3, ChevronRight, FileText, Gift, Landmark, Play, Scale } from "lucide-react";
+import { ChevronRight, FileText, Gift, Play } from "lucide-react";
 import { t } from "@/lib/i18n";
 import type { Category } from "@/lib/types";
 import { levelWindowStart } from "@/hooks/useCategoryContent";
@@ -22,7 +22,6 @@ export function CategoryCard({ category, index }: { category: Category; index: n
   const cardImageUrl = category.mapBackgroundUrl || category.iconUrl;
   const curveId = `category-card-curve-${category.id.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const displayTitle = category.title.replace(/\s*\(Art\.?\s*[^)]*\)\s*$/i, "");
-  const HeaderIcon = [FileText, BarChart3, Landmark, Scale][index % 4];
 
   function preloadCategory() {
     const startLevel = levelWindowStart(levelsCompleted);
@@ -73,7 +72,17 @@ export function CategoryCard({ category, index }: { category: Category; index: n
         <div className="category-card-body">
           <header className="category-card-header">
             <div className="category-card-heading">
-              <HeaderIcon className="category-card-icon" strokeWidth={2.4} aria-hidden="true" />
+              {category.iconUrl ? (
+                <img
+                  src={category.iconUrl}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="category-card-icon"
+                />
+              ) : (
+                <FileText className="category-card-icon" strokeWidth={2.4} aria-hidden="true" />
+              )}
               <h2 className="category-card-title">{displayTitle}</h2>
             </div>
             <div className="category-card-actions">
@@ -90,4 +99,11 @@ export function CategoryCard({ category, index }: { category: Category; index: n
             )}
             <span className="category-play-button">
               <Play className="category-play-icon fill-current" />
-              {t(language, "pl
+              {t(language, "play")}
+            </span>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
