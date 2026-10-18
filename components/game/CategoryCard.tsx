@@ -3,9 +3,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, FileText, Gift, Play } from "lucide-react";
+import { ChevronRight, FileText, Gift, LoaderCircle, Play } from "lucide-react";
 import { t } from "@/lib/i18n";
 import type { Category } from "@/lib/types";
 import { levelWindowStart } from "@/hooks/useCategoryContent";
@@ -15,13 +15,23 @@ import { usePlayerStore } from "@/store/playerStore";
 export function CategoryCard({ category, index }: { category: Category; index: number }) {
   const router = useRouter();
   const preloadKeyRef = useRef("");
+  const [isOpening, setIsOpening] = useState(false);
   const language = usePlayerStore((state) => state.language);
   const levelsCompleted = usePlayerStore(
     (state) => state.progress.find((item) => item.categoryId === category.id)?.levelsCompleted ?? 0
   );
-  const cardImageUrl = category.mapBackgroundUrl || category.iconUrl;
+  const cardImageUrl = category.cardBackgroundUrl || category.mapBackgroundUrl || category.iconUrl;
   const curveId = `category-card-curve-${category.id.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const displayTitle = category.title.replace(/\s*\(Art\.?\s*[^)]*\)\s*$/i, "");
+
+  useEffect(() => {
+    if (!isOpening) {
+      return;
+    }
+
+    const resetTimer = window.setTimeout(() => setIsOpening(false), 12_000);
+    return () => window.clearTimeout(resetTimer);
+  }, [isOpening]);
 
   function preloadCategory() {
     const startLevel = levelWindowStart(levelsCompleted);
@@ -32,11 +42,11 @@ export function CategoryCard({ category, index }: { category: Category; index: n
 
     preloadKeyRef.current = preloadKey;
     void router.prefetch(`/category/${category.id}`);
-    void syncCategoryContent({ categoryId: category.id, startLevel }).catch(() => {
+    void syncCategoryContent({ categoryId: category.id, startLevel, includePrevious: true }).catch(() => {
       preloadKeyRef.current = "";
     });
 
-    for (const imageUrl of [category.mapBackgroundUrl, category.levelPodiumUrl]) {
+    for (const imageUrl of [category.cardBackgroundUrl, category.mapBackgroundUrl, category.levelPodiumUrl]) {
       if (imageUrl) {
         const image = new Image();
         image.src = imageUrl;
@@ -53,11 +63,19 @@ export function CategoryCard({ category, index }: { category: Category; index: n
     >
       <Link
         href={`/category/${category.id}`}
-        prefetch={false}
+        prefetch
+        aria-busy={isOpening}
         data-analytics-id="category-card"
         data-analytics-label={`Category ${category.title}`}
         onPointerEnter={preloadCategory}
-        onPointerDown={preloadCategory}
+        onPointerDown={(event) => {
+          preloadCategory();
+          if (event.pointerType === "touch" || event.pointerType === "pen") {
+            setIsOpening(true);
+          }
+        }}
+        onPointerCancel={() => setIsOpening(false)}
+        onClick={() => setIsOpening(true)}
         onFocus={preloadCategory}
         className="category-card pressable relative flex h-full w-full min-w-0 max-w-full overflow-hidden"
         style={{ "--category-color": category.colorHex } as CSSProperties}
@@ -98,8 +116,17 @@ export function CategoryCard({ category, index }: { category: Category; index: n
               <span className="category-card-media-fallback" aria-hidden="true" />
             )}
             <span className="category-play-button">
-              <Play className="category-play-icon fill-current" />
-              {t(language, "play")}
+              {isOpening ? (
+                <>
+                  <LoaderCircle className="category-play-loader animate-spin" aria-hidden="true" />
+                  {t(language, "loading")}
+                </>
+              ) : (
+                <>
+                  <Play className="category-play-icon fill-current" />
+                  {t(language, "play")}
+                </>
+              )}
             </span>
           </div>
         </div>

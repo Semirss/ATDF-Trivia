@@ -38,7 +38,7 @@ function VerifiedName({ row, label }: { row: LeaderboardRow; label: string }) {
   );
 }
 
-function LeaderboardRowCard({ row, verifiedLabel, own }: { row: LeaderboardRow; verifiedLabel: string; own: boolean }) {
+function LeaderboardRowCard({ row, verifiedLabel, pointsLabel, own }: { row: LeaderboardRow; verifiedLabel: string; pointsLabel: string; own: boolean }) {
   return (
     <div className={`leaderboard-row-card ${own ? "is-own" : ""}`}>
       <span className="leaderboard-row-rank">{row.globalRank}</span>
@@ -50,7 +50,7 @@ function LeaderboardRowCard({ row, verifiedLabel, own }: { row: LeaderboardRow; 
         </span>
       </div>
       <div className="leaderboard-row-score">
-        <strong>{row.totalScore} pts</strong>
+        <strong>{row.totalScore} {pointsLabel}</strong>
         <span>{row.completionPercent}%</span>
       </div>
     </div>
@@ -59,12 +59,13 @@ function LeaderboardRowCard({ row, verifiedLabel, own }: { row: LeaderboardRow; 
 
 export default function LeaderboardPage() {
   const playerId = usePlayerStore((state) => state.playerId);
-  const { rows, ownRow, isLoading, error } = useLeaderboard(playerId);
+  const { rows, ownRow, isLoading, error } = useLeaderboard(playerId ?? undefined);
   const language = usePlayerStore((state) => state.language);
   const topThree = rows.slice(0, 3);
   const podiumRows = [topThree[1], topThree[0], topThree[2]].filter(Boolean) as LeaderboardRow[];
   const rest = rows.slice(3);
   const verifiedLabel = t(language, "verifiedPlayerAria");
+  const pointsLabel = t(language, "pointsShort");
 
   return (
     <PageTransition>
@@ -93,7 +94,7 @@ export default function LeaderboardPage() {
                     </span>
                     <PlayerAvatar row={row} priority className="leaderboard-podium-avatar" />
                     <div className="leaderboard-podium-name"><VerifiedName row={row} label={verifiedLabel} /></div>
-                    <strong className="leaderboard-podium-score">{row.totalScore} pts</strong>
+                    <strong className="leaderboard-podium-score">{row.totalScore} {pointsLabel}</strong>
                   </div>
                 );
               })}
@@ -105,7 +106,7 @@ export default function LeaderboardPage() {
           <section className="leaderboard-list">
             {rest.map((row) => (
               <div key={row.playerId}>
-                <LeaderboardRowCard row={row} verifiedLabel={verifiedLabel} own={row.playerId === playerId} />
+                <LeaderboardRowCard row={row} verifiedLabel={verifiedLabel} pointsLabel={pointsLabel} own={row.playerId === playerId} />
               </div>
             ))}
           </section>

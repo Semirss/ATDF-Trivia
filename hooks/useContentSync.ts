@@ -5,10 +5,13 @@ import { fetchRemoteMessages } from "@/lib/game-client";
 import { useContentStore } from "@/store/contentStore";
 import type { GameContent, Message } from "@/lib/types";
 
-const contentCacheKey = "trivia-game-content-v1";
-const gameBootstrapCacheKey = "trivia-game-bootstrap-v1";
+const contentCacheKey = "trivia-game-content-v2";
+const gameBootstrapCacheKey = "trivia-game-bootstrap-v2";
 const messagesCacheKey = "trivia-game-messages-v2";
-const syncFreshnessMs = 30_000;
+const contentRequestVersion = "3";
+const contentFreshnessMs = 5 * 60_000;
+const categoryFreshnessMs = 10 * 60_000;
+const messagesFreshnessMs = 30_000;
 let contentSyncPromise: Promise<void> | null = null;
 let gameBootstrapSyncPromise: Promise<void> | null = null;
 let messagesSyncPromise: Promise<Message[]> | null = null;
@@ -149,7 +152,7 @@ function hydrateCachedMessages() {
 }
 
 export function syncGameContent({ force = false }: SyncOptions = {}) {
-  if (!force && lastContentSyncAt > 0 && Date.now() - lastContentSyncAt < syncFreshnessMs) {
+  if (!force && lastContentSyncAt > 0 && Date.now() - lastContentSyncAt < contentFreshnessMs) {
     return Promise.resolve();
   }
 
@@ -159,7 +162,7 @@ export function syncGameContent({ force = false }: SyncOptions = {}) {
 
   contentSyncPromise = (async () => {
     try {
-      const response = await fetch("/api/game/content", { cache: "no-store" });
+      const response = await fetch(`/api/game/content?v=${contentRequestVersion}`);
       if (!response.ok) {
         const payload = (await response.json().catch(() => ({}))) as { error?: string };
         if (!useContentStore.getState().isLoaded) {
@@ -185,7 +188,7 @@ export function syncGameContent({ force = false }: SyncOptions = {}) {
 }
 
 export function syncGameBootstrap({ force = false }: SyncOptions = {}) {
-  if (!force && lastGameBootstrapSyncAt > 0 && Date.now() - lastGameBootstrapSyncAt < syncFreshnessMs) {
+  if (!force && lastGameBootstrapSyncAt > 0 && Date.now() - lastGameBootstrapSyncAt < contentFreshnessMs) {
     return Promise.resolve();
   }
 
@@ -195,7 +198,7 @@ export function syncGameBootstrap({ force = false }: SyncOptions = {}) {
 
   gameBootstrapSyncPromise = (async () => {
     try {
-      const response = await fetch("/api/game/content?scope=bootstrap", { cache: "no-store" });
+      const response = await fetch(`/api/game/content?scope=bootstrap&v=${contentRequestVersion}`);
       if (!response.ok) {
         const payload = (await response.json().catch(() => ({}))) as { error?: string };
         if (!useContentStore.getState().isLoaded) {
@@ -249,7 +252,7 @@ export function syncCategoryContent({
         )
       : undefined);
 
-  if (!force && cached && Date.now() - cached.syncedAt < syncFreshnessMs) {
+  if (!force && cached && Date.now() - cached.syncedAt < categoryFreshnessMs) {
     useContentStore.getState().replaceCategoryChunk(contentWithCurrentMessages(cached.data), {
       categoryId,
       startLevel: cached.includePrevious ? 1 : cached.meta.startLevel,
@@ -265,6 +268,7 @@ export function syncCategoryContent({
 
   const params = new URLSearchParams({
     scope: "category",
+    v: contentRequestVersion,
     categoryId,
     startLevel: String(normalizedStart),
     limit: String(normalizedLimit)
@@ -277,7 +281,7 @@ export function syncCategoryContent({
   }
 
   const syncPromise = (async () => {
-    const response = await fetch(`/api/game/content?${params.toString()}`, { cache: "no-store" });
+    const response = await fetch(`/api/game/content?${params.toString()}`);
     if (!response.ok) {
       const payload = (await response.json().catch(() => ({}))) as { error?: string };
       throw new Error(payload.error ?? "Unable to load this map.");
@@ -306,7 +310,7 @@ export function syncCategoryContent({
 }
 
 export function syncRecentMessages({ force = false }: SyncOptions = {}) {
-  if (!force && lastMessagesSyncAt > 0 && Date.now() - lastMessagesSyncAt < syncFreshnessMs) {
+  if (!force && lastMessagesSyncAt > 0 && Date.now() - lastMessagesSyncAt < messagesFreshnessMs) {
     return Promise.resolve(lastRecentMessages ?? useContentStore.getState().messages.slice(0, 80));
   }
 

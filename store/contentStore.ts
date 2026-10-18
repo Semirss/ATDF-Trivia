@@ -227,6 +227,7 @@ export const useContentStore = create<ContentState>()(
         sortOrder: get().categories.length,
         colorHex: values.colorHex,
         description: values.description,
+        cardBackgroundUrl: values.cardBackgroundUrl,
         mapBackgroundUrl: values.mapBackgroundUrl,
         levelPodiumUrl: values.levelPodiumUrl,
         createdAt: timestamp,
@@ -244,6 +245,7 @@ export const useContentStore = create<ContentState>()(
                 ...category,
                 ...values,
                 iconUrl: values.iconUrl ?? category.iconUrl,
+                cardBackgroundUrl: values.cardBackgroundUrl ?? category.cardBackgroundUrl,
                 mapBackgroundUrl: values.mapBackgroundUrl ?? category.mapBackgroundUrl,
                 levelPodiumUrl: values.levelPodiumUrl ?? category.levelPodiumUrl,
                 updatedAt: nowIso()

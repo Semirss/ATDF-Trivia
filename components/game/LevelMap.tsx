@@ -118,12 +118,12 @@ export function LevelMap({
   }, [categoryId, playableLevel, router]);
 
   return (
-    <div className="relative h-full overflow-hidden bg-[#dce3e1]">
+    <div className="relative h-full overflow-hidden bg-[#022b46]">
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           backgroundImage: backgroundImageUrl
-            ? `linear-gradient(rgba(220,227,225,0.1), rgba(220,227,225,0.1)), url(${backgroundImageUrl})`
+            ? `linear-gradient(rgba(0,31,53,0.08), rgba(0,31,53,0.16)), url(${backgroundImageUrl})`
             : `radial-gradient(circle at 72% 16%, ${hexToRgba(colorHex, 0.28)}, transparent 14rem), radial-gradient(circle at 20% 72%, rgba(255,180,200,0.34), transparent 12rem), linear-gradient(180deg,#dfe7e5,#d4dad7)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -143,21 +143,6 @@ export function LevelMap({
             minHeight: "100%"
           }}
         >
-          <div className="absolute inset-0 opacity-25">
-            <div className="absolute left-8 bottom-28 h-44 w-28 rotate-[-24deg] rounded-full border-l-2 border-pink/60" />
-            <div className="absolute right-4 top-24 h-56 w-32 rotate-[18deg] rounded-full border-r-2 border-pink/50" />
-          </div>
-          {Array.from({ length: 30 }, (_, index) => (
-            <span
-              key={index}
-              className="petal"
-              style={{
-            left: `${8 + ((index * 17) % 84)}%`,
-            top: `${4 + ((index * 37) % 92)}%`,
-                animationDelay: `${index * 0.26}s`
-              }}
-            />
-          ))}
           <svg
             className="absolute inset-x-0 top-0 h-full w-full"
             viewBox={`0 0 340 ${mapHeight}`}
@@ -167,7 +152,7 @@ export function LevelMap({
             <motion.path
               d={path}
               fill="none"
-              stroke="rgba(156, 163, 175, 0.4)"
+              stroke={hexToRgba(colorHex, 0.42)}
               strokeWidth="13"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -178,7 +163,7 @@ export function LevelMap({
             <motion.path
               d={path}
               fill="none"
-              stroke="#9CA3AF"
+              stroke="rgba(251,248,236,0.9)"
               strokeWidth="5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -244,7 +229,7 @@ export function LevelMap({
               >
                 <div className="level-node-stage relative grid h-32 w-32 justify-items-center">
                   <div
-                    className="level-podium pointer-events-none absolute left-1/2 top-[44px] z-0 h-20 w-28 -translate-x-1/2"
+                    className="level-podium pointer-events-none absolute left-1/2 top-[42px] z-0 h-[76px] w-[118px] -translate-x-1/2"
                     style={{
                       backgroundImage: podiumImageUrl
                         ? `url(${podiumImageUrl})`
@@ -275,7 +260,7 @@ export function LevelMap({
                     ) : (
                       <Play className="h-6 w-6 fill-ink text-ink" />
                     )}
-                    <span className="absolute -bottom-2.5 rounded-full bg-black px-2.5 py-0.5 text-[9px] font-black uppercase text-white">
+                    <span className="level-node-label absolute -bottom-2.5 rounded-full px-2.5 py-0.5 text-[9px] font-black uppercase text-white">
                       {t(language, "levelShort")}{level.levelNumber}
                     </span>
                   </div>
@@ -303,7 +288,7 @@ export function LevelMap({
                     </div>
                   ) : null}
                   {level.savedSession ? (
-                    <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-black px-2 py-0.5 text-[8px] font-black uppercase text-white">
+                    <div className="level-resume-pill mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[8px] font-black uppercase text-white">
                       <RotateCcw className="h-2.5 w-2.5" />
                       {t(language, "resume")}
                     </div>

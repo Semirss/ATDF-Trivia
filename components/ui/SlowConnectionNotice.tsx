@@ -7,7 +7,7 @@ import { LoaderCircle } from "lucide-react";
 export function SlowConnectionNotice({
   active,
   message,
-  delayMs = 1200,
+  delayMs = 6000,
   className = "bottom-24"
 }: {
   active: boolean;
@@ -24,7 +24,11 @@ export function SlowConnectionNotice({
       return;
     }
 
-    const timer = window.setTimeout(() => setVisible(true), delayMs);
+    const timer = window.setTimeout(() => {
+      if (!document.hidden) {
+        setVisible(true);
+      }
+    }, delayMs);
     return () => window.clearTimeout(timer);
   }, [active, delayMs]);
 

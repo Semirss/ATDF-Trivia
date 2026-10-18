@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       sort_order: (lastCategory.data?.sort_order ?? -1) + 1,
       color_hex: parsed.data.colorHex,
       description: parsed.data.description,
+      card_background_url: parsed.data.cardBackgroundUrl,
       map_background_url: parsed.data.mapBackgroundUrl,
       level_podium_url: parsed.data.levelPodiumUrl
     })

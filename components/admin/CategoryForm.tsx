@@ -16,6 +16,7 @@ const defaults: CategoryFormValues = {
   isRewardBased: false,
   isActive: true,
   description: "",
+  cardBackgroundUrl: "",
   mapBackgroundUrl: "",
   levelPodiumUrl: ""
 };
@@ -39,6 +40,7 @@ export function CategoryForm({
           isRewardBased: category.isRewardBased,
           isActive: category.isActive,
           description: category.description,
+          cardBackgroundUrl: category.cardBackgroundUrl,
           mapBackgroundUrl: category.mapBackgroundUrl,
           levelPodiumUrl: category.levelPodiumUrl
         }
@@ -93,6 +95,13 @@ export function CategoryForm({
             onChange={(nextValue) => setValue("iconUrl", nextValue)}
           />
           <AssetUploader
+            label="Home card background"
+            value={values.cardBackgroundUrl}
+            folder="categories/cards"
+            description="Upload the wide illustrated scene used behind this category on the home screen."
+            onChange={(nextValue) => setValue("cardBackgroundUrl", nextValue)}
+          />
+          <AssetUploader
             label="Map background"
             value={values.mapBackgroundUrl}
             folder="categories/backgrounds"
@@ -109,14 +118,23 @@ export function CategoryForm({
           <div className="grid gap-4 rounded-2xl border border-black/10 bg-black/[0.03] p-4">
             <div>
               <div className="mb-2 text-xs font-black uppercase tracking-[0.16em] text-black/45">Game card preview</div>
-              <div className="rounded-[24px] p-4 text-white shadow-sm" style={{ background: `linear-gradient(135deg, ${values.colorHex}, ${values.colorHex}BB)` }}>
-                <div className="flex items-center gap-3">
-                  {values.iconUrl ? <img src={values.iconUrl} alt={values.title || "Category icon"} className="h-14 w-14 rounded-2xl bg-white/10 object-cover p-2" /> : null}
-                  <div>
-                    <div className="text-xl font-black">{values.title || "Category name"}</div>
-                  </div>
+              <div
+                className="relative h-52 overflow-hidden rounded-[24px] border border-white/60 bg-[#062e48] text-white shadow-sm"
+                style={{
+                  backgroundImage: values.cardBackgroundUrl
+                    ? `linear-gradient(180deg, rgba(3,35,57,.82) 0%, rgba(3,35,57,.18) 52%, rgba(3,35,57,.12) 100%), url(${values.cardBackgroundUrl})`
+                    : `linear-gradient(135deg, ${values.colorHex}, #062e48)`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center"
+                }}
+              >
+                <div className="relative z-10 flex items-start gap-3 p-4">
+                  {values.iconUrl ? <img src={values.iconUrl} alt={values.title || "Category icon"} className="h-12 w-12 rounded-full border-2 border-white bg-white object-cover p-1 shadow-md" /> : null}
+                  <div className="max-w-[72%] text-xl font-black leading-[1.05] drop-shadow">{values.title || "Category name"}</div>
                 </div>
-                <p className="mt-3 text-sm font-bold text-white/80">{values.description || "Your category description preview appears here."}</p>
+                <div className="absolute inset-x-4 bottom-3 z-10 rounded-full border border-white/70 bg-gradient-to-b from-[#6bd44c] to-[#35b73d] py-3 text-center text-sm font-black uppercase shadow-lg">
+                  ▶ Play
+                </div>
               </div>
             </div>
 

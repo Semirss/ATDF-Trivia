@@ -260,7 +260,7 @@ export default function MessagesPage() {
               priority
             />
           </div>
-          <p className="chat-header-kicker">Live Board</p>
+          <p className="chat-header-kicker">{t(language, "liveBoard")}</p>
           <h1 className="chat-header-title">{t(language, "chat")}</h1>
           <span className="chat-title-rule" />
         </header>

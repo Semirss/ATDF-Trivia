@@ -1,7 +1,9 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
 import { useMemo } from "react";
+import { ArrowLeft, FileText } from "lucide-react";
 import { LevelMap } from "@/components/game/LevelMap";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { SlowConnectionNotice } from "@/components/ui/SlowConnectionNotice";
@@ -82,6 +84,19 @@ export default function CategoryMapPage({ params }: { params: { categoryId: stri
   return (
     <PageTransition instant>
       <div className="relative h-full overflow-hidden">
+        <header className="map-category-header">
+          <Link href="/" className="map-category-back" aria-label={t(language, "home")}>
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <span className="map-category-icon">
+            {category.iconUrl ? (
+              <img src={category.iconUrl} alt="" decoding="async" />
+            ) : (
+              <FileText className="h-6 w-6" aria-hidden="true" />
+            )}
+          </span>
+          <h1>{category.title}</h1>
+        </header>
         <div className="map-score pointer-events-none absolute right-4 z-20">
           <div className="map-score-card rounded-[18px] px-4 py-2 text-right">
             <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-white/55">{t(language, "score")}</span>

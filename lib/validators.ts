@@ -17,6 +17,7 @@ export const categoryFormSchema = z.object({
   isRewardBased: z.boolean(),
   isActive: z.boolean(),
   description: z.string().min(8, "Description is required"),
+  cardBackgroundUrl: z.string().optional().default(""),
   mapBackgroundUrl: z.string().optional().default(""),
   levelPodiumUrl: z.string().optional().default("")
 });

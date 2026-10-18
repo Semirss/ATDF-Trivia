@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -69,6 +70,9 @@ export function QuestionList({
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0">
                 <div className="text-xs font-black uppercase text-black/45">Question {startIndex + index + 1}</div>
+                {question.mediaUrl ? (
+                  <img src={question.mediaUrl} alt="" className="mt-2 max-h-44 w-full max-w-sm rounded-xl bg-black/[0.03] object-contain" />
+                ) : null}
                 <h3 className="mt-1 text-lg font-black">{question.questionText}</h3>
                 <div className="mt-2 grid gap-2 text-sm font-bold text-black/58 md:grid-cols-2">
                   {answerOptions.map((option) => (

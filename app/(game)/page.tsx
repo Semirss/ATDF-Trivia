@@ -124,22 +124,22 @@ export default function HomePage() {
           />
         ) : null}
 
-        <section className="home-reference-hero" aria-label="Learn, play and build a stronger Africa">
+        <section className="home-reference-hero" aria-label={`${t(language, "sloganLearn")}, ${t(language, "sloganPlay")}, ${t(language, "sloganBuildStronger")} ${t(language, "sloganAfrica")}`}>
           <button type="button" onClick={() => setDonationOpen(true)} className="home-tip-button">
             <Lightbulb className="h-5 w-5" strokeWidth={2.4} />
-            <span>Tip</span>
+            <span>{t(language, "tipAction")}</span>
           </button>
           <p className="home-slogan">
-            <span>Learn</span>
-            <span>Play</span>
-            <span>Build a stronger</span>
-            <span>Africa</span>
+            <span>{t(language, "sloganLearn")}</span>
+            <span>{t(language, "sloganPlay")}</span>
+            <span>{t(language, "sloganBuildStronger")}</span>
+            <span>{t(language, "sloganAfrica")}</span>
           </p>
           <Image
-            src="/Logos/atdf-2026.svg"
+            src="/visuals/atdf-2026-seal-optimized.png"
             alt="ATDF 2026"
-            width={96}
-            height={96}
+            width={124}
+            height={124}
             priority
             className="home-atdf-seal"
           />
@@ -151,7 +151,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             className="home-main-title"
           >
-            <span>Trivia</span> <em>Games</em>
+            <span>{t(language, "triviaTitle")}</span> <em>{t(language, "gamesTitle")}</em>
           </motion.h1>
 
           <button
@@ -162,7 +162,7 @@ export default function HomePage() {
             <span className="home-player-initial">{displayName.charAt(0).toUpperCase()}</span>
             <span className="home-progress-copy">
               <strong>{displayName}</strong>
-              <small>{hasVerification ? t(language, "verifiedPlayer") : "Continue your learning journey"}</small>
+              <small>{hasVerification ? t(language, "verifiedPlayer") : t(language, "continueLearningJourney")}</small>
               <span className="home-progress-track">
                 <i style={{ width: `${Math.max(completionPercent, 7)}%` }} />
               </span>
@@ -175,7 +175,7 @@ export default function HomePage() {
           </button>
 
           <section className="home-sponsors">
-            <p>Our sponsors</p>
+            <p>{t(language, "ourSponsors")}</p>
             <PartnerLogoStrip />
           </section>
 

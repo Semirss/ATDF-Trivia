@@ -14,6 +14,7 @@ export type Database = {
           sort_order: number;
           color_hex: string;
           description: string;
+          card_background_url: string;
           map_background_url: string;
           level_podium_url: string;
           created_at: string | null;
@@ -29,6 +30,7 @@ export type Database = {
           sort_order?: number;
           color_hex?: string;
           description?: string;
+          card_background_url?: string;
           map_background_url?: string;
           level_podium_url?: string;
           created_at?: string;
@@ -44,6 +46,7 @@ export type Database = {
           sort_order?: number;
           color_hex?: string;
           description?: string;
+          card_background_url?: string;
           map_background_url?: string;
           level_podium_url?: string;
           created_at?: string;

@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Camera, ChevronRight, LoaderCircle, MessageSquare, ShieldCheck, Target, Trophy, Zap } from "lucide-react";
+import { BadgeCheck, BookOpen, ChevronRight, LoaderCircle, MessageSquare, Settings, ShieldCheck, Target, Trophy, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { FallbackIcon } from "@/components/game/FallbackIcon";
 import { PlayerAccountModal } from "@/components/game/PlayerAccountModal";
@@ -104,12 +104,11 @@ export default function ProfilePage() {
         {rewardProfileOpen ? <RewardProfileModal onClose={() => setRewardProfileOpen(false)} /> : null}
 
         <section className="profile-reference-hero">
-          <p>Profile</p>
-          <span />
-          <div className="atdf-seal profile-seal" aria-hidden="true"><span>ATDF</span><strong>2026</strong></div>
-        </section>
+          <Link href="/settings" className="profile-settings-button" aria-label={t(language, "settingsTitle")}>
+            <Settings className="h-[17px] w-[17px]" strokeWidth={2.8} />
+          </Link>
+          <img src="/visuals/atdf-2026-seal-optimized.png" alt="ATDF 2026" className="profile-seal" />
 
-        <main className="profile-content-sheet">
           <section className="profile-identity">
             <button
               type="button"
@@ -122,15 +121,17 @@ export default function ProfilePage() {
               ) : (
                 <span>{name?.charAt(0).toUpperCase() || "?"}</span>
               )}
-              <i>{isUploading ? <LoaderCircle className="h-3 w-3 animate-spin" /> : <Camera className="h-3 w-3" />}</i>
+              {isUploading ? <i><LoaderCircle className="h-4 w-4 animate-spin" /></i> : null}
             </button>
             <div className="profile-identity-copy">
-              <h1>{name ?? t(language, "newPlayer")}</h1>
+              <h1>{name ?? t(language, "newPlayer")}<BadgeCheck aria-hidden="true" /></h1>
               <p>{age ? `${age} ${t(language, "yearsOld")}` : t(language, "completeOnboarding")}</p>
               <p>{t(language, "joined")} {timeAgo(createdAt, language)}</p>
             </div>
           </section>
+        </section>
 
+        <main className="profile-content-sheet">
           <input
             ref={inputRef}
             type="file"

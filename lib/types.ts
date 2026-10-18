@@ -51,6 +51,7 @@ export interface Category {
   sortOrder: number;
   colorHex: string;
   description: string;
+  cardBackgroundUrl: string;
   mapBackgroundUrl: string;
   levelPodiumUrl: string;
   createdAt: string;
@@ -362,6 +363,7 @@ export interface CategoryFormValues {
   isRewardBased: boolean;
   isActive: boolean;
   description: string;
+  cardBackgroundUrl: string;
   mapBackgroundUrl: string;
   levelPodiumUrl: string;
 }

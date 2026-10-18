@@ -32,6 +32,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       sort_order: parsed.data.sortOrder,
       color_hex: parsed.data.colorHex,
       description: parsed.data.description,
+      card_background_url: parsed.data.cardBackgroundUrl,
       map_background_url: parsed.data.mapBackgroundUrl,
       level_podium_url: parsed.data.levelPodiumUrl,
       updated_at: new Date().toISOString()

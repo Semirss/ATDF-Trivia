@@ -67,6 +67,7 @@ export function mapCategory(row: CategoryRow): Category {
     sortOrder: row.sort_order,
     colorHex: row.color_hex,
     description: row.description,
+    cardBackgroundUrl: row.card_background_url ?? "",
     mapBackgroundUrl: row.map_background_url,
     levelPodiumUrl: row.level_podium_url,
     createdAt: row.created_at ?? "",

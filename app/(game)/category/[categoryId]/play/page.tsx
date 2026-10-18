@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -330,6 +331,16 @@ function PlayContent({ params }: { params: { categoryId: string } }) {
                 className={`play-question-panel ${reveal ? "play-question-panel-answered" : ""} shrink-0 rounded-[22px] p-3`}
               >
                 <p className="play-question-eyebrow text-[10px] font-black uppercase">{session.category?.title}</p>
+                {question.mediaUrl ? (
+                  <figure className="play-question-media mt-2">
+                    <img
+                      src={question.mediaUrl}
+                      alt={localizedQuestion?.questionText ?? question.questionText}
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </figure>
+                ) : null}
                 <h1 className="play-question-text mt-1 text-balance font-display font-black">
                   {localizedQuestion?.questionText ?? question.questionText}
                 </h1>

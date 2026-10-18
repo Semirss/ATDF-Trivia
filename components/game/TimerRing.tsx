@@ -14,12 +14,12 @@ export function TimerRing({ timeRemaining, total }: { timeRemaining: number; tot
   return (
     <div className="timer-ring relative grid place-items-center">
       <svg viewBox="0 0 120 120" className={cn("absolute inset-0", urgent && "animate-pulse")}>
-        <circle cx="60" cy="60" r={radius} stroke="rgba(255,255,255,0.75)" strokeWidth="12" fill="none" />
+        <circle cx="60" cy="60" r={radius} stroke="rgba(2,43,70,0.14)" strokeWidth="12" fill="none" />
         <motion.circle
           cx="60"
           cy="60"
           r={radius}
-          stroke={urgent ? "#ff4d4d" : "#f2b84b"}
+          stroke={urgent ? "#e34f5f" : "#5fbe43"}
           strokeWidth="12"
           strokeLinecap="round"
           fill="none"

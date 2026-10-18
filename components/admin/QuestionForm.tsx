@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -206,6 +207,9 @@ export function QuestionForm({
           <div className="rounded-2xl border border-black/10 bg-black/[0.03] p-4">
             <div className="mb-2 text-xs font-black uppercase tracking-[0.16em] text-black/45">Quick review</div>
             <div className="space-y-2 rounded-2xl bg-white p-4 shadow-sm">
+              {values.mediaUrl ? (
+                <img src={values.mediaUrl} alt="Question preview" className="max-h-52 w-full rounded-xl bg-black/[0.03] object-contain" />
+              ) : null}
               <div className="text-base font-black">{values.questionText || "Question preview"}</div>
               {previewOptions.length > 0 ? (
                 <div className="grid gap-2 text-sm font-bold text-black/65">

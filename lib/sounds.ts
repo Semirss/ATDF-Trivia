@@ -43,6 +43,7 @@ let bgWasPendingBeforePause = false;
 let bgPausedPlaybackId: number | null = null;
 let bgPausedIndex: number | null = null;
 let tickStopTimer: number | null = null;
+let pendingEffect: Exclude<SoundKey, "bg" | "tick"> | null = null;
 
 function normalizeBgIndex(index: number) {
   if (bgFiles.length === 0) {
@@ -76,6 +77,17 @@ function setBgIndex(index: number) {
   }
 }
 
+function getDifferentBgIndex() {
+  const currentIndex = getBgIndex();
+
+  if (bgFiles.length < 2) {
+    return currentIndex;
+  }
+
+  const offset = 1 + Math.floor(Math.random() * (bgFiles.length - 1));
+  return normalizeBgIndex(currentIndex + offset);
+}
+
 function stopAllBackgroundTracks({ unload = false }: { unload?: boolean } = {}) {
   for (const [cacheKey, howl] of cache.entries()) {
     if (!cacheKey.startsWith("bg_")) {
@@ -99,6 +111,19 @@ function isMuted() {
     return window.localStorage.getItem("trivia-muted") === "true";
   } catch {
     return false;
+  }
+}
+
+function getStoredVolume() {
+  if (typeof window === "undefined") {
+    return 1;
+  }
+
+  try {
+    const stored = Number.parseFloat(window.localStorage.getItem("trivia-volume") ?? "1");
+    return Number.isFinite(stored) ? Math.min(1, Math.max(0, stored)) : 1;
+  } catch {
+    return 1;
   }
 }
 
@@ -339,6 +364,12 @@ function unlockFromInteraction() {
       if (bgPending) {
         startBgNow();
       }
+
+      if (pendingEffect) {
+        const effect = pendingEffect;
+        pendingEffect = null;
+        void playOneShotNow(effect);
+      }
     })
     .finally(() => {
       unlockInProgress = false;
@@ -390,6 +421,7 @@ export const SoundManager = {
   boot() {
     attachInteractionListeners();
     attachLifecycleListeners();
+    Howler.volume(getStoredVolume());
     Howler.mute(isMuted());
   },
   unlock() {
@@ -411,6 +443,12 @@ export const SoundManager = {
     }
 
     if (!audioUnlocked) {
+      // Mobile browsers can finish their audio unlock just after the React
+      // click handler. Keep the important answer/result sound so that first
+      // interaction is not silently lost while the context resumes.
+      if (key !== "tick") {
+        pendingEffect = key;
+      }
       return;
     }
 
@@ -433,6 +471,7 @@ export const SoundManager = {
     Howler.mute(muted);
 
     if (muted) {
+      pendingEffect = null;
       bgPending = false;
       bgPlaybackId = null;
       bgStarting = false;
@@ -451,6 +490,25 @@ export const SoundManager = {
     if (audioUnlocked) {
       startBgNow();
     }
+  },
+  getMuted() {
+    return isMuted();
+  },
+  getVolume() {
+    return getStoredVolume();
+  },
+  setVolume(volume: number) {
+    const normalizedVolume = Math.min(1, Math.max(0, volume));
+
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem("trivia-volume", String(normalizedVolume));
+      } catch {
+        // The live volume still changes if storage is unavailable.
+      }
+    }
+
+    Howler.volume(normalizedVolume);
   },
   startBg() {
     bgPending = true;
@@ -546,6 +604,12 @@ export const SoundManager = {
     this.stopBg();
     const nextIndex = normalizeBgIndex(getBgIndex() + 1);
     setBgIndex(nextIndex);
+    this.startBg();
+  },
+  shuffleBg() {
+    if (typeof window === "undefined") return;
+    this.stopBg();
+    setBgIndex(getDifferentBgIndex());
     this.startBg();
   }
 };

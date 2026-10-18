@@ -31,7 +31,7 @@ export function useTelegramViewport() {
     }
 
     function retryPresentationFromGesture() {
-      requestTelegramPresentation();
+      requestTelegramPresentation({ requestFullscreen: true });
       applyTelegramViewportVars();
     }
 
@@ -59,7 +59,6 @@ export function useTelegramViewport() {
     window.addEventListener("pageshow", restoreViewport);
     document.addEventListener("visibilitychange", restoreVisibleViewport);
     window.addEventListener("pointerdown", retryPresentationFromGesture, { once: true, passive: true });
-    window.addEventListener("touchstart", retryPresentationFromGesture, { once: true, passive: true });
 
     return () => {
       window.clearInterval(retryTimer);
@@ -69,7 +68,6 @@ export function useTelegramViewport() {
       window.removeEventListener("pageshow", restoreViewport);
       document.removeEventListener("visibilitychange", restoreVisibleViewport);
       window.removeEventListener("pointerdown", retryPresentationFromGesture);
-      window.removeEventListener("touchstart", retryPresentationFromGesture);
       webApp?.offEvent?.("viewportChanged", syncViewport);
       webApp?.offEvent?.("safeAreaChanged", syncViewport);
       webApp?.offEvent?.("contentSafeAreaChanged", syncViewport);

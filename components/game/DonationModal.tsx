@@ -131,6 +131,7 @@ export function DonationModal({
         aria-busy={isSubmitting}
         lang={language}
       >
+        <span className="donation-botanical" aria-hidden="true" />
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2">
             <span className="donation-icon grid h-11 w-11 shrink-0 place-items-center rounded-[16px]">

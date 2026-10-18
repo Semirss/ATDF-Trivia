@@ -50,6 +50,11 @@ declare global {
     Telegram?: {
       WebApp?: TelegramWebApp;
     };
+    __triviaTelegramPresentation?: {
+      webApp: TelegramWebApp;
+      baseRequested: boolean;
+      fullscreenRequested: boolean;
+    };
   }
 }
 
@@ -296,23 +301,46 @@ function isVersionAtLeast(webApp: TelegramWebApp, minimumVersion: string) {
   return true;
 }
 
-export function requestTelegramPresentation() {
+export function requestTelegramPresentation({
+  requestFullscreen = false
+}: { requestFullscreen?: boolean } = {}) {
   const webApp = getTelegramWebApp();
 
   if (!webApp) {
     return;
   }
 
-  try {
-    webApp.ready?.();
-    webApp.expand?.();
+  const presentation =
+    window.__triviaTelegramPresentation?.webApp === webApp
+      ? window.__triviaTelegramPresentation
+      : {
+          webApp,
+          baseRequested: false,
+          fullscreenRequested: false
+        };
+  window.__triviaTelegramPresentation = presentation;
 
-    if (isVersionAtLeast(webApp, "7.7")) {
-      webApp.disableVerticalSwipes?.();
+  try {
+    if (!presentation.baseRequested) {
+      // Telegram logs every call. Keep these lifecycle calls idempotent across
+      // React remounts and Fast Refresh instead of firing them on every resize.
+      webApp.ready?.();
+      webApp.expand?.();
+
+      if (isVersionAtLeast(webApp, "7.7")) {
+        webApp.disableVerticalSwipes?.();
+      }
+
+      presentation.baseRequested = true;
     }
 
-    if (isVersionAtLeast(webApp, "8.0")) {
+    if (
+      requestFullscreen &&
+      !presentation.fullscreenRequested &&
+      isVersionAtLeast(webApp, "8.0")
+    ) {
       webApp.requestFullscreen?.();
+      presentation.fullscreenRequested = true;
     }
   } catch {
     // Telegram presentation APIs are best-effort and depend on client support.
@@ -336,7 +364,6 @@ export function applyTelegramViewportVars() {
   }
 
   root.dataset.telegramWebapp = "true";
-  requestTelegramPresentation();
 
   const viewportHeight = webApp?.viewportStableHeight || webApp?.viewportHeight || window.innerHeight;
   const safeTop = Math.max(webApp?.safeAreaInset?.top ?? 0, webApp?.contentSafeAreaInset?.top ?? 0);

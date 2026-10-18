@@ -2,10 +2,10 @@ import Image from "next/image";
 
 const partnerLogos = [
   {
-    src: "/Logos/atdf-2026.svg",
-    alt: "ATDF 2026",
-    width: 320,
-    height: 180
+    src: "/Logos/atdf-ribbon-logo-transparent-v1.png",
+    alt: "ATDF",
+    width: 1254,
+    height: 1254
   },
   {
     src: "/Logos/flawless-events.svg",

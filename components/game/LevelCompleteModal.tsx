@@ -53,7 +53,7 @@ export function LevelCompleteModal({
   }, [avatarUrl]);
 
   return (
-    <div className="absolute inset-0 z-50 grid place-items-center bg-black/52 p-5 backdrop-blur-md">
+    <div className="level-complete-overlay absolute inset-0 z-50 grid place-items-center p-5 backdrop-blur-md">
       <SlowConnectionNotice
         active={isReturning}
         message={t(language, "slowConnection")}

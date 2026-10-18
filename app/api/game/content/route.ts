@@ -32,7 +32,7 @@ const fallbackContent = buildGameContent({
 });
 
 function cacheHeaders() {
-  return { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" };
+  return { "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=86400" };
 }
 
 export async function GET(request: Request) {
@@ -48,7 +48,8 @@ export async function GET(request: Request) {
             ...data,
             categories: data.categories.filter((category) => category.isActive),
             levels: [],
-            questions: []
+            questions: [],
+            messages: []
           },
           source: "supabase"
         },
@@ -96,7 +97,8 @@ export async function GET(request: Request) {
             ...data,
             categories: [category],
             levels,
-            questions
+            questions,
+            messages: []
           },
           meta: {
             startLevel,
