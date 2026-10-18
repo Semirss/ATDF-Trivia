@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, Lightbulb, ShieldCheck } from "lucide-react";
 import { CategoryCard } from "@/components/game/CategoryCard";
@@ -12,6 +12,7 @@ import { PartnerLogoStrip } from "@/components/game/PartnerLogoStrip";
 import { PlayIntroScene } from "@/components/game/PlayIntroScene";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { useCategories } from "@/hooks/useCategories";
+import { markHomeSplashSeen, shouldShowHomeSplash } from "@/lib/home-splash";
 import { t } from "@/lib/i18n";
 import { syncTelegramPlayerFromWebApp } from "@/lib/telegram-player";
 import { isTelegramMiniApp } from "@/lib/telegram-webapp";
@@ -27,7 +28,8 @@ const PlayerAccountModal = dynamic(
 export default function HomePage() {
   const router = useRouter();
   const [verificationOpen, setVerificationOpen] = useState(false);
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
+  const [introChecked, setIntroChecked] = useState(false);
   const [isIntroLoading, setIsIntroLoading] = useState(false);
   const [donationOpen, setDonationOpen] = useState(false);
   const categories = useCategories();
@@ -51,11 +53,21 @@ export default function HomePage() {
   const completionPercent = totalLevels > 0 ? Math.min(100, Math.round((completedLevels / totalLevels) * 100)) : 0;
   const displayName = name?.trim().split(/\s+/)[0] || t(language, "newChallenger");
 
+  useEffect(() => {
+    setShowIntro(shouldShowHomeSplash());
+    setIntroChecked(true);
+  }, []);
+
+  if (!introChecked) {
+    return <div className="h-full w-full bg-[#002b45]" aria-hidden="true" />;
+  }
+
   if (showIntro) {
     return (
       <PlayIntroScene
         isLoading={isIntroLoading}
         onPlay={async () => {
+          markHomeSplashSeen();
           if (!usePlayerStore.getState().isLoaded) {
             await new Promise<void>((resolve) => {
               const timeout = setTimeout(resolve, 500);

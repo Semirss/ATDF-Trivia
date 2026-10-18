@@ -1,8 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { motion } from "framer-motion";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, Crown } from "lucide-react";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import { t } from "@/lib/i18n";
@@ -59,8 +58,8 @@ function LeaderboardRowCard({ row, verifiedLabel, own }: { row: LeaderboardRow; 
 }
 
 export default function LeaderboardPage() {
-  const { rows, isLoading, error } = useLeaderboard();
   const playerId = usePlayerStore((state) => state.playerId);
+  const { rows, ownRow, isLoading, error } = useLeaderboard(playerId);
   const language = usePlayerStore((state) => state.language);
   const topThree = rows.slice(0, 3);
   const podiumRows = [topThree[1], topThree[0], topThree[2]].filter(Boolean) as LeaderboardRow[];
@@ -77,43 +76,64 @@ export default function LeaderboardPage() {
             <span />
           </div>
 
-          {isLoading ? <div className="leaderboard-status">{t(language, "loadingLeaderboard")}</div> : null}
           {error ? <div className="leaderboard-status is-error">{error}</div> : null}
 
-          <div className="leaderboard-podium-grid">
-            {podiumRows.map((row, index) => {
-              const isWinner = row.globalRank === 1;
-              return (
-                <motion.div
-                  key={row.playerId}
-                  initial={{ opacity: 0, y: 34 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.07, type: "spring" }}
-                  className={`leaderboard-podium-card rank-${row.globalRank} ${isWinner ? "is-winner" : ""}`}
-                >
-                  <span className="leaderboard-medal">{row.globalRank}</span>
-                  <PlayerAvatar row={row} priority={isWinner} className="leaderboard-podium-avatar" />
-                  <div className="leaderboard-podium-name"><VerifiedName row={row} label={verifiedLabel} /></div>
-                  <strong className="leaderboard-podium-score">{row.totalScore} pts</strong>
-                </motion.div>
-              );
-            })}
-          </div>
+          {!isLoading && rows.length > 0 ? (
+            <div className="leaderboard-podium-grid">
+              {podiumRows.map((row) => {
+                const isWinner = row.globalRank === 1;
+                return (
+                  <div
+                    key={row.playerId}
+                    className={`leaderboard-podium-card rank-${row.globalRank} ${isWinner ? "is-winner" : ""}`}
+                  >
+                    <span className="leaderboard-medal">
+                      {isWinner ? <Crown className="leaderboard-crown" aria-hidden="true" /> : null}
+                      <span>{row.globalRank}</span>
+                    </span>
+                    <PlayerAvatar row={row} priority className="leaderboard-podium-avatar" />
+                    <div className="leaderboard-podium-name"><VerifiedName row={row} label={verifiedLabel} /></div>
+                    <strong className="leaderboard-podium-score">{row.totalScore} pts</strong>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
         </section>
 
-        <section className="leaderboard-list">
-          {rest.map((row, index) => (
-            <motion.div
-              key={row.playerId}
-              initial={index < 10 ? { opacity: 0, x: 12 } : false}
-              animate={index < 10 ? { opacity: 1, x: 0 } : undefined}
-              transition={{ delay: Math.min(index, 8) * 0.025 }}
-            >
-              <LeaderboardRowCard row={row} verifiedLabel={verifiedLabel} own={row.playerId === playerId} />
-            </motion.div>
-          ))}
-        </section>
+        {!isLoading && rows.length > 0 ? (
+          <section className="leaderboard-list">
+            {rest.map((row) => (
+              <div key={row.playerId}>
+                <LeaderboardRowCard row={row} verifiedLabel={verifiedLabel} own={row.playerId === playerId} />
+              </div>
+            ))}
+          </section>
+        ) : null}
       </div>
+
+      {!isLoading && ownRow ? (
+        <aside className="leaderboard-own-sticky" aria-label={t(language, "globalRank")}>
+          <div className="leaderboard-own-card">
+            <span className="leaderboard-own-rank">{ownRow.globalRank}</span>
+            <PlayerAvatar row={ownRow} priority className="leaderboard-own-avatar" />
+            <div className="leaderboard-own-main">
+              <span className="leaderboard-own-meta">{t(language, "globalRank")}</span>
+              <div className="leaderboard-own-name"><VerifiedName row={ownRow} label={verifiedLabel} /></div>
+              <span className="leaderboard-own-track">
+                <i
+                  className="leaderboard-own-progress"
+                  style={{ width: `${Math.max(ownRow.completionPercent, 4)}%` }}
+                />
+              </span>
+            </div>
+            <div className="leaderboard-own-score">
+              <strong>{ownRow.totalScore} {t(language, "pointsShort")}</strong>
+              <span>{ownRow.completionPercent}%</span>
+            </div>
+          </div>
+        </aside>
+      ) : null}
     </PageTransition>
   );
 }

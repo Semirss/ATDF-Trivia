@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchGameLeaderboard } from "@/lib/game-client";
+import { fetchGameLeaderboard, fetchGameLeaderboardRow } from "@/lib/game-client";
 import type { LeaderboardRow } from "@/lib/types";
 
-const leaderboardLimit = 60;
+const leaderboardLimit = 30;
 let cachedRows: LeaderboardRow[] | null = null;
 let cachedAt = 0;
 let leaderboardPromise: Promise<LeaderboardRow[]> | null = null;
+const cachedOwnRows = new Map<string, LeaderboardRow | null>();
+const ownRowPromises = new Map<string, Promise<LeaderboardRow | null>>();
 const leaderboardFreshnessMs = 30_000;
 
 function loadLeaderboardRows() {
@@ -32,8 +34,34 @@ function loadLeaderboardRows() {
   return leaderboardPromise;
 }
 
-export function useLeaderboard() {
+function loadOwnLeaderboardRow(playerId: string) {
+  if (cachedOwnRows.has(playerId)) {
+    return Promise.resolve(cachedOwnRows.get(playerId) ?? null);
+  }
+
+  const pending = ownRowPromises.get(playerId);
+  if (pending) {
+    return pending;
+  }
+
+  const promise = fetchGameLeaderboardRow(playerId)
+    .then((row) => {
+      cachedOwnRows.set(playerId, row);
+      return row;
+    })
+    .finally(() => {
+      ownRowPromises.delete(playerId);
+    });
+
+  ownRowPromises.set(playerId, promise);
+  return promise;
+}
+
+export function useLeaderboard(playerId?: string) {
   const [rows, setRows] = useState<LeaderboardRow[]>(() => cachedRows ?? []);
+  const [ownRow, setOwnRow] = useState<LeaderboardRow | null>(() =>
+    playerId ? cachedRows?.find((row) => row.playerId === playerId) ?? cachedOwnRows.get(playerId) ?? null : null
+  );
   const [isLoading, setIsLoading] = useState(() => !cachedRows);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,8 +93,38 @@ export function useLeaderboard() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!playerId) {
+      setOwnRow(null);
+      return;
+    }
+
+    const listedRow = rows.find((row) => row.playerId === playerId);
+    if (listedRow) {
+      cachedOwnRows.set(playerId, listedRow);
+      setOwnRow(listedRow);
+      return;
+    }
+
+    let cancelled = false;
+    setOwnRow(cachedOwnRows.get(playerId) ?? null);
+
+    void loadOwnLeaderboardRow(playerId).then((row) => {
+      if (!cancelled) {
+        setOwnRow(row);
+      }
+    }).catch(() => {
+      // The main leaderboard remains usable if only the personal row fails.
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [playerId, rows]);
+
   return {
     rows,
+    ownRow,
     isLoading,
     error
   };

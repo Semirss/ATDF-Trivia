@@ -562,8 +562,8 @@ html[data-telegram-webapp="true"] .game-safe.game-play-safe {
 
 .leaderboard-own-sticky {
   position: absolute;
-  left: 14px;
-  right: 14px;
+  left: 8px;
+  right: 8px;
   bottom: var(--leaderboard-own-bottom);
   z-index: 35;
 }
@@ -1911,13 +1911,13 @@ body {
   left: 8px !important;
   bottom: var(--bottom-nav-bottom);
   min-height: var(--bottom-nav-height);
-  border: 1px solid rgba(6, 43, 67, 0.08);
-  border-radius: 26px !important;
+  border: 1px solid rgba(6, 43, 67, 0.1);
+  border-radius: 28px !important;
   padding: 0 7px !important;
   color: var(--atdf-navy);
-  background: rgba(255, 253, 246, 0.96);
-  box-shadow: 0 5px 22px rgba(4, 43, 69, 0.09), inset 0 1px 0 #fff;
-  backdrop-filter: blur(18px);
+  background: #fffdf6;
+  box-shadow: 0 -3px 18px rgba(4, 43, 69, 0.08), 0 5px 22px rgba(4, 43, 69, 0.09), inset 0 1px 0 #fff;
+  backdrop-filter: none !important;
 }
 
 .bottom-nav .pressable {
@@ -1930,7 +1930,7 @@ body {
   height: auto !important;
   width: auto !important;
   border-radius: 28px !important;
-  background: #edf6d6;
+  background: color-mix(in srgb, #69bd43 19%, white);
 }
 
 .bottom-nav-icon {
@@ -1951,7 +1951,7 @@ body {
 }
 
 .bottom-nav .text-cyan-200 {
-  color: #79d34e !important;
+  color: #69bd43 !important;
 }
 
 .bottom-nav span:last-child {
@@ -2005,8 +2005,8 @@ body {
 .home-slogan {
   position: absolute;
   z-index: 3;
-  top: 27%;
-  left: 18px;
+  top: 32%;
+  left: 14px;
   width: 104px;
   max-width: 28%;
   margin: 0;
@@ -2269,16 +2269,33 @@ body {
 
 /* Leaderboard */
 .leaderboard-safe {
-  padding: 8px 6px calc(var(--bottom-nav-height) + var(--bottom-nav-bottom) + 16px) !important;
-  background: #e9f6e7;
+  padding: 0 0 var(--leaderboard-own-scroll-space) !important;
+  scroll-padding-bottom: var(--leaderboard-own-scroll-space);
+  background: #fffdf6;
 }
 
 .leaderboard-hero {
   position: relative;
-  height: 320px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 8;
   overflow: hidden;
-  border-radius: 22px 22px 12px 12px;
-  background: var(--atdf-navy) url("/visuals/leaderboard-hero.jpg") center / 100% 100% no-repeat;
+  border-radius: 0;
+  background: var(--atdf-navy) url("/visuals/leaderboard-hero-v3.jpg") center / cover no-repeat;
+}
+
+.leaderboard-hero::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: 2;
+  height: 20px;
+  border-radius: 22px 22px 0 0;
+  background: #fffdf6;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.72);
+  pointer-events: none;
 }
 
 .leaderboard-heading {
@@ -2298,21 +2315,32 @@ body {
 
 .leaderboard-podium-grid {
   position: absolute;
-  right: 9px;
+  right: 0;
   bottom: 0;
-  left: 9px;
+  left: 0;
   z-index: 3;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  height: clamp(135px, calc((100vw - 16px) / 2), 225px);
+  grid-template-columns: 0.94fr 1.12fr 0.94fr;
   align-items: end;
-  gap: 6px;
+  gap: 0;
+}
+
+.leaderboard-podium-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("/visuals/leaderboard-podium-frames-v1-mobile.png") center bottom / 100% 100% no-repeat;
+  pointer-events: none;
 }
 
 .leaderboard-podium-card {
   position: relative;
+  z-index: 1;
   display: flex;
   min-width: 0;
-  height: 145px;
+  height: 86%;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
@@ -2320,14 +2348,14 @@ body {
   border: 3px solid #68ba49;
   border-bottom: 0;
   border-radius: 15px 15px 0 0;
-  padding: 44px 5px 10px;
+  padding: 44px 5px 22px;
   color: #fff;
   background: linear-gradient(180deg, rgba(8, 69, 75, 0.95), rgba(2, 44, 57, 0.98));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 -5px 18px rgba(1, 30, 45, 0.18);
 }
 
 .leaderboard-podium-card.is-winner {
-  height: 167px;
+  height: 100%;
   border-color: #8bc943;
   background: linear-gradient(180deg, rgba(13, 82, 77, 0.98), rgba(2, 43, 56, 0.99));
 }
@@ -2354,11 +2382,30 @@ body {
 .rank-1 .leaderboard-medal { top: -23px; width: 42px; height: 42px; color: #8c5a00; background: #ffce3e; }
 .rank-3 .leaderboard-medal { color: #704218; background: #e4a36e; }
 
+.leaderboard-medal > span {
+  position: relative;
+  z-index: 2;
+}
+
+.leaderboard-crown {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  color: #ffc400;
+  fill: #ffc400;
+  stroke: #b97800;
+  stroke-width: 1.7;
+  transform: translateX(-50%);
+}
+
 .leaderboard-podium-avatar {
   position: absolute;
   top: 25px;
-  width: 66px;
-  height: 66px;
+  width: clamp(52px, 17vw, 66px);
+  height: clamp(52px, 17vw, 66px);
   overflow: hidden;
   border: 4px solid #e8eef0;
   border-radius: 50%;
@@ -2368,16 +2415,20 @@ body {
   font-size: 22px;
 }
 
-.is-winner .leaderboard-podium-avatar { top: 30px; width: 76px; height: 76px; }
+.is-winner .leaderboard-podium-avatar { top: 30px; width: clamp(62px, 20vw, 78px); height: clamp(62px, 20vw, 78px); }
 .leaderboard-podium-name { width: 100%; margin-top: auto; font-size: 11px; font-weight: 900; }
 .leaderboard-podium-name > div { justify-content: center; }
 .leaderboard-podium-score { margin-top: 3px; color: #f1d421; font-size: 12px; }
 
 .leaderboard-list {
+  position: relative;
+  z-index: 4;
   display: grid;
   gap: 5px;
-  margin-top: 5px;
-  padding: 0 5px;
+  margin-top: 0;
+  border-radius: 0;
+  padding: 12px 11px 10px;
+  background: #fffdf6;
 }
 
 .leaderboard-row-card {
@@ -2646,9 +2697,9 @@ body {
   .home-main-title { font-size: 37px; }
   .home-content-sheet { margin-top: -24px; }
   .category-card { min-height: 140px !important; }
-  .leaderboard-hero { height: 300px; }
-  .leaderboard-podium-card { height: 135px; }
-  .leaderboard-podium-card.is-winner { height: 155px; }
+  .leaderboard-hero { height: auto; }
+  .leaderboard-podium-card { height: 86%; }
+  .leaderboard-podium-card.is-winner { height: 100%; }
   .profile-content-sheet { padding-inline: 14px; }
 }
 
@@ -2658,9 +2709,9 @@ body {
   .partner-logo-strip-home .partner-logo-tile { height: 34px; }
   .partner-logo-strip-home .partner-logo-image { max-height: 29px; }
   .category-card { min-height: 135px !important; }
-  .leaderboard-hero { height: 290px; }
-  .leaderboard-podium-card { height: 132px; }
-  .leaderboard-podium-card.is-winner { height: 152px; }
+  .leaderboard-hero { height: auto; }
+  .leaderboard-podium-card { height: 86%; }
+  .leaderboard-podium-card.is-winner { height: 100%; }
   .leaderboard-podium-avatar { width: 58px; height: 58px; }
   .is-winner .leaderboard-podium-avatar { width: 66px; height: 66px; }
   .profile-reference-hero { height: 205px; }
@@ -2721,45 +2772,96 @@ body,
 }
 
 .leaderboard-own-card {
-  position: relative;
+  display: flex;
+  min-height: 70px;
+  align-items: center;
+  gap: 8px;
   overflow: hidden;
-  border: 2px solid var(--gold);
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 12% 8%, var(--stage-glow-a), transparent 42%),
-    radial-gradient(circle at 88% 92%, var(--stage-glow-b), transparent 48%),
-    linear-gradient(135deg, var(--game-bg), var(--game-bg-deep));
-  box-shadow:
-    0 16px 36px rgba(0,0,0,0.28),
-    inset 0 1px 0 rgba(255,255,255,0.42);
+  border: 2px solid #69bd43;
+  border-radius: 20px;
+  padding: 8px 10px;
+  color: var(--atdf-navy);
+  background: #fffdf6;
+  box-shadow: 0 8px 24px rgba(0, 43, 67, 0.18), inset 0 1px 0 #fff;
 }
 
 .leaderboard-own-rank {
-  background: linear-gradient(135deg, var(--gold), var(--ember));
-  color: #111;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--atdf-navy);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  font-size: 13px;
+  font-weight: 1000;
 }
 
 .leaderboard-own-avatar {
-  border: 2px solid var(--gold);
-  background: var(--panel);
-  color: var(--ink);
-  box-shadow:
-    0 0 0 3px rgba(255,255,255,0.36),
-    0 8px 18px rgba(0,0,0,0.18);
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 2px solid #69bd43;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--atdf-navy);
+}
+
+.leaderboard-own-main {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 3px;
 }
 
 .leaderboard-own-meta {
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
+  color: #4d7f38;
+  font-size: 8px;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.leaderboard-own-name {
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 1000;
 }
 
 .leaderboard-own-track {
-  background: color-mix(in srgb, var(--ink) 14%, transparent);
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.14);
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d7ddd6;
 }
 
 .leaderboard-own-progress {
-  background: linear-gradient(90deg, var(--gold), var(--pink), var(--pool));
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #69bd43;
+}
+
+.leaderboard-own-score {
+  display: grid;
+  flex: 0 0 auto;
+  justify-items: end;
+  line-height: 1.2;
+}
+
+.leaderboard-own-score strong {
+  font-size: 11px;
+}
+
+.leaderboard-own-score span {
+  color: #778087;
+  font-size: 9px;
+  font-weight: 900;
 }
 
 .level-podium {
@@ -2830,15 +2932,20 @@ html[data-telegram-webapp="true"] .level-map-shortcut {
 }
 
 .leaderboard-podium-card {
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.2);
+  overflow: visible;
+  border: 0;
   color: #fff;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.16), transparent 38%),
-    linear-gradient(155deg, rgba(48,51,62,0.98), rgba(17,19,25,0.97));
-  box-shadow:
-    0 18px 38px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.16);
+  background: transparent;
+  box-shadow: none;
+}
+
+.leaderboard-podium-card.is-winner {
+  border: 0;
+  background: transparent;
+}
+
+.leaderboard-podium-card.rank-3 {
+  border: 0;
 }
 
 .leaderboard-podium-name {
@@ -2854,11 +2961,11 @@ html[data-telegram-webapp="true"] .level-map-shortcut {
 .leaderboard-row-card {
   border: 1px solid color-mix(in srgb, var(--ink) 10%, white);
   color: var(--ink);
-  background: color-mix(in srgb, var(--panel) 94%, white);
+  background: #fffdf6;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.58),
     0 12px 24px rgba(0,0,0,0.12);
-  backdrop-filter: blur(16px);
+  backdrop-filter: none;
 }
 
 .leaderboard-row-rank {

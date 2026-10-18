@@ -531,30 +531,45 @@ export async function fetchPlayerSnapshot(playerId: string): Promise<PlayerSnaps
 
 export async function fetchLeaderboard(limit?: number): Promise<LeaderboardRow[]> {
   const supabase = await requireSupabase();
-  const [data, authoritativeViewProbe] = await Promise.all([
-    fetchAllPages<any>((from, to) =>
-      supabase
-        .from("leaderboard")
-        .select("*")
-        .order("total_score", { ascending: false })
-        .order("questions_answered", { ascending: false })
-        .order("player_id", { ascending: true })
-        .range(from, to)
-    ),
-    (supabase as any).rpc("reconcile_progress_scores", { target_category_ids: [] })
-  ]);
+  const safeLimit = typeof limit === "number" && Number.isFinite(limit)
+    ? Math.max(1, Math.trunc(limit))
+    : null;
 
-  const mappedRows = data.map(mapLeaderboardRow);
-  const authoritativeRows = authoritativeViewProbe.error
-    ? await applyAuthoritativeLeaderboardScores(mappedRows)
-    : mappedRows;
-  const rankedRows = rankLeaderboardRows(authoritativeRows);
-  return typeof limit === "number" && Number.isFinite(limit) ? rankedRows.slice(0, limit) : rankedRows;
+  const createQuery = () =>
+    supabase
+      .from("leaderboard")
+      .select("*")
+      .order("total_score", { ascending: false })
+      .order("questions_answered", { ascending: false })
+      .order("player_id", { ascending: true });
+
+  let data: any[];
+  if (safeLimit) {
+    const result = await createQuery().limit(safeLimit);
+    if (result.error) {
+      throw new Error(result.error.message);
+    }
+    data = result.data ?? [];
+  } else {
+    data = await fetchAllPages<any>((from, to) => createQuery().range(from, to));
+  }
+
+  return rankLeaderboardRows(data.map(mapLeaderboardRow));
 }
 
 export async function fetchLeaderboardRow(playerId: string): Promise<LeaderboardRow | null> {
-  const rows = await fetchLeaderboard();
-  return rows.find((row) => row.playerId === playerId) ?? null;
+  const supabase = await requireSupabase();
+  const result = await supabase
+    .from("leaderboard")
+    .select("*")
+    .eq("player_id", playerId)
+    .maybeSingle();
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  return result.data ? mapLeaderboardRow(result.data) : null;
 }
 
 export async function fetchAdminOverview(): Promise<AdminOverview> {
