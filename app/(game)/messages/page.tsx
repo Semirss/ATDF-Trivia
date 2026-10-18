@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { toast } from "sonner";
-import { ChevronRight, Paperclip, Pin, Reply, Send, X } from "lucide-react";
+import { MoreVertical, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { syncRecentMessages } from "@/hooks/useContentSync";
@@ -55,6 +55,13 @@ function formatMessageTime(postedAt: string) {
 function ChatAvatar({ avatarUrl, playerName }: { avatarUrl?: string; playerName: string }) {
   const [imageFailed, setImageFailed] = useState(false);
   const useFallback = !avatarUrl || imageFailed;
+  const initials =
+    playerName
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("") || "P";
 
   useEffect(() => {
     setImageFailed(false);
@@ -62,15 +69,19 @@ function ChatAvatar({ avatarUrl, playerName }: { avatarUrl?: string; playerName:
 
   return (
     <div className="chat-avatar h-9 w-9 shrink-0 overflow-hidden rounded-full">
-      <Image
-        src={useFallback ? "/robot-mascot.png" : avatarUrl}
-        alt={useFallback ? "Trivia bot" : `${playerName} profile`}
-        width={34}
-        height={34}
-        sizes="36px"
-        onError={() => setImageFailed(true)}
-        className={`h-full w-full rounded-full ${useFallback ? "object-contain p-1" : "object-cover"}`}
-      />
+      {useFallback ? (
+        <span className="chat-avatar-initials" aria-hidden="true">{initials}</span>
+      ) : (
+        <Image
+          src={avatarUrl || "/robot-mascot.png"}
+          alt={`${playerName} profile`}
+          width={36}
+          height={36}
+          sizes="36px"
+          onError={() => setImageFailed(true)}
+          className="h-full w-full rounded-full object-cover"
+        />
+      )}
     </div>
   );
 }
@@ -239,16 +250,20 @@ export default function MessagesPage() {
     <PageTransition>
       <div className="game-safe chat-safe flex h-full min-h-0 flex-col">
         <header className="chat-reference-header shrink-0">
-          <p className="chat-header-kicker">Community</p>
+          <div className="chat-atdf-stamp" aria-hidden="true">
+            <Image
+              src="/visuals/atdf-2026-seal.png"
+              alt=""
+              width={104}
+              height={104}
+              sizes="104px"
+              priority
+            />
+          </div>
+          <p className="chat-header-kicker">Live Board</p>
           <h1 className="chat-header-title">{t(language, "chat")}</h1>
           <span className="chat-title-rule" />
         </header>
-
-        <button type="button" className="chat-topic-pill">
-          <span className="chat-topic-icon"><Pin className="h-4 w-4 fill-current" /></span>
-          <span>Market Access &amp; Trade Facilitation</span>
-          <ChevronRight className="h-4 w-4" strokeWidth={3} />
-        </button>
 
         <div
           ref={scrollRef}
@@ -287,7 +302,7 @@ export default function MessagesPage() {
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.96 }}
-                    className={`chat-message-row group flex w-full min-w-0 items-end gap-2 ${isOwnMessage ? "flex-row-reverse" : ""}`}
+                    className="chat-message-row group flex w-full min-w-0 items-end gap-2"
                   >
                     <ChatAvatar
                       avatarUrl={isOwnMessage ? playerAvatarUrl ?? message.avatarUrl : message.avatarUrl}
@@ -321,7 +336,7 @@ export default function MessagesPage() {
                           aria-label={`${t(language, "replyTo")} ${message.playerName}`}
                           className="chat-reply-action grid h-8 w-8 shrink-0 place-items-center rounded-full transition active:scale-95"
                         >
-                          <Reply className="h-3.5 w-3.5" />
+                          <MoreVertical className="h-4 w-4" strokeWidth={2.4} />
                         </button>
                       </div>
                       <p className="chat-message-body mt-1 whitespace-pre-wrap break-words text-[14px] font-medium leading-relaxed">
@@ -355,9 +370,6 @@ export default function MessagesPage() {
             </div>
           ) : null}
           <div className="flex items-center gap-1">
-            <button type="button" className="chat-attach-button" aria-label="Attach a file">
-              <Paperclip className="h-[18px] w-[18px]" />
-            </button>
             <input
               value={text}
               onChange={(event) => setText(event.target.value)}
