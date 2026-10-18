@@ -115,13 +115,13 @@ export default function OnboardingPage() {
   if (isTelegramChecking) {
     return (
       <PageTransition>
-        <div className="game-safe game-safe-compact grid min-h-full place-items-center">
-          <div className="glass-panel rounded-[30px] p-8 text-center">
-            <LoaderCircle className="mx-auto h-8 w-8 animate-spin text-black/50" />
-            <p className="mt-4 font-display text-lg font-black leading-none">
+        <div className="game-safe game-safe-compact onboarding-screen grid min-h-full place-items-center">
+          <div className="glass-panel onboarding-card onboarding-loading-card rounded-[30px] p-8 text-center">
+            <LoaderCircle className="onboarding-loading-spinner mx-auto h-8 w-8 animate-spin" />
+            <p className="onboarding-loading-title mt-4 font-display text-lg font-black leading-none">
               {t(language, "loadingTelegram")}
             </p>
-            <p className="mt-2 text-sm font-bold text-black/55">
+            <p className="onboarding-loading-subtitle mt-2 text-sm font-bold">
               {t(language, "checkingTelegramProfile")}
             </p>
           </div>
@@ -132,26 +132,26 @@ export default function OnboardingPage() {
 
   return (
     <PageTransition>
-      <div className="game-safe game-safe-compact grid min-h-full place-items-center">
+      <div className="game-safe game-safe-compact onboarding-screen grid min-h-full place-items-center">
         {loginOpen ? (
           <PlayerAccountModal initialMode="login" onClose={() => setLoginOpen(false)} onComplete={() => router.push("/")} />
         ) : null}
-        <form onSubmit={submit} className="w-full">
+        <form onSubmit={submit} className="onboarding-form w-full">
           <motion.div
             key={step}
             initial={{ opacity: 0, y: 34, scale: 0.94, rotateX: -8 }}
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
             exit={{ opacity: 0, y: -24 }}
-            className="glass-panel rounded-[30px] p-5 text-center"
+            className="glass-panel onboarding-card rounded-[30px] p-5 text-center"
           >
-            <div className="mx-auto flex justify-center">
+            <div className="onboarding-mascot mx-auto flex justify-center">
               <RiveWidget mood={step === "age" ? "happy" : "thinking"} />
             </div>
             <motion.h1
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="mt-4 font-display text-3xl font-black leading-none"
+              className="onboarding-title mt-4 font-display text-3xl font-black leading-none"
             >
               {step === "name" ? t(language, "whatsYourName") : t(language, "howOldAreYou")}
             </motion.h1>
@@ -164,7 +164,7 @@ export default function OnboardingPage() {
                   placeholder={t(language, "yourName")}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="h-14 w-full rounded-[20px] border border-white/75 bg-white/82 px-4 text-center font-display text-xl font-black outline-none shadow-bevel"
+                  className="onboarding-name-input h-14 w-full rounded-[20px] border px-4 text-center font-display text-xl font-black outline-none"
                 />
               ) : (
                 <div className="rounded-[24px] bg-white/70 p-4 shadow-bevel">
@@ -214,14 +214,14 @@ export default function OnboardingPage() {
                 </div>
               )}
             </div>
-            <button type="submit" disabled={isSaving} className="shine-sweep dark-pill mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-[18px] text-sm font-black uppercase disabled:opacity-60">
+            <button type="submit" disabled={isSaving} className="shine-sweep dark-pill onboarding-start-button mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-[18px] text-sm font-black uppercase disabled:opacity-60">
               {isSaving ? t(language, "saving") : t(language, "start")}
               <ArrowRight className="h-5 w-5" />
             </button>
             <button
               type="button"
               onClick={() => setLoginOpen(true)}
-              className="mt-3 min-h-11 w-full rounded-[18px] bg-white/70 text-xs font-black uppercase text-black/58 shadow-bevel"
+              className="onboarding-account-button mt-3 min-h-11 w-full rounded-[18px] text-xs font-black uppercase"
             >
               {t(language, "haveAccount")}
             </button>

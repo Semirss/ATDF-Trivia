@@ -27,6 +27,7 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
   useMessageRealtime(!isMessagesPage);
   const isLeaderboardPage = pathname === "/leaderboard";
   const isSettingsPage = pathname === "/settings";
+  const isOnboardingPage = pathname === "/onboarding";
   const hideTopBar = pathname.includes("/play") || pathname === "/onboarding" || isMapPage || isLeaderboardPage || isSettingsPage;
   const hideNav = pathname.includes("/play") || pathname === "/onboarding";
 
@@ -44,7 +45,7 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
   }, []);
 
   return (
-    <main className="game-viewport">
+    <main className={`game-viewport ${isOnboardingPage ? "game-viewport-onboarding" : ""}`}>
       <section className={`phone-stage ${isMessagesPage ? "phone-stage-chat" : ""}`}>
         {!hideTopBar ? <GameTopBar /> : null}
         {isMessagesPage ? (
