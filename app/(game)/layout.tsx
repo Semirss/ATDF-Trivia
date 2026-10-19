@@ -28,7 +28,15 @@ export default function GameLayout({ children }: { children: React.ReactNode }) 
   const isLeaderboardPage = pathname === "/leaderboard";
   const isSettingsPage = pathname === "/settings";
   const isOnboardingPage = pathname === "/onboarding";
-  const hideTopBar = pathname.includes("/play") || pathname === "/onboarding" || isMapPage || isLeaderboardPage || isSettingsPage;
+  const isProfilePage = pathname === "/profile";
+  const hideTopBar =
+    pathname.includes("/play") ||
+    pathname === "/onboarding" ||
+    isMapPage ||
+    isLeaderboardPage ||
+    isSettingsPage ||
+    isMessagesPage ||
+    isProfilePage;
   const hideNav = pathname.includes("/play") || pathname === "/onboarding";
 
   useEffect(() => {

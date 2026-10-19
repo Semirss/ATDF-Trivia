@@ -13,6 +13,18 @@ const suppressExtensionWarningsScript = `
     originalError.apply(console, args);
   };
 `;
+const earlyTelegramDetectionScript = `
+  (function() {
+    try {
+      var ua = navigator.userAgent.toLowerCase();
+      var qs = location.search.toLowerCase();
+      var isTg = ua.indexOf("telegram") !== -1 || qs.indexOf("tgwebapp") !== -1 || qs.indexOf("tgwebplatform") !== -1 || (window.Telegram && window.Telegram.WebApp);
+      if (isTg) {
+        document.documentElement.setAttribute("data-telegram-webapp", "true");
+      }
+    } catch(e) {}
+  })();
+`;
 
 export const metadata: Metadata = {
   title: "Trivia Quest",
@@ -36,6 +48,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="afterInteractive" />
         <Script id="suppress-extension-warnings" strategy="beforeInteractive">
           {suppressExtensionWarningsScript}
+        </Script>
+        <Script id="early-telegram-detect" strategy="beforeInteractive">
+          {earlyTelegramDetectionScript}
         </Script>
       </head>
       <body className={`${inter.variable} ${outfit.variable} font-sans`} suppressHydrationWarning>

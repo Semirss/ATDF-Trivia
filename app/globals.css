@@ -5096,3 +5096,165 @@ html[data-telegram-webapp="true"] .play-continue-dock {
     height: 119.05%;
   }
 }
+
+/* ==========================================================================
+   Telegram Mini App (TMA) Full-Screen Safe Area System
+   Protects every page against overlap by Telegram's floating header controls
+   (✕ Close on the left, ˅ ⋮ on the right) and device bottom navigation/gestures.
+   Web experience remains completely untouched.
+   ========================================================================== */
+
+html[data-telegram-webapp="true"] {
+  --tg-safe-top: max(var(--tg-content-safe-area-inset-top, 0px), calc(var(--tg-safe-area-inset-top, 0px) + 44px), 74px);
+  --tg-safe-bottom: max(var(--tg-content-safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px), env(safe-area-inset-bottom, 0px), 16px);
+  --game-topbar-y: calc(var(--tg-safe-top) + 8px);
+  --bottom-nav-bottom: calc(var(--tg-safe-bottom) + 20px);
+  --bottom-nav-clearance: calc(var(--tg-safe-bottom) + 108px);
+  --map-score-clearance: calc(var(--tg-safe-bottom) + 116px);
+}
+
+/* 1. Launch Sequence: Event Poster & Trivia Splash */
+html[data-telegram-webapp="true"] .play-intro-scene.launch-sequence {
+  padding: 0 !important;
+  background: #002b45 !important;
+}
+
+html[data-telegram-webapp="true"] .launch-stage {
+  position: absolute !important;
+  top: var(--tg-safe-top) !important;
+  bottom: var(--tg-safe-bottom) !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: auto !important;
+  overflow: hidden !important;
+  background: #002b45 !important;
+}
+
+html[data-telegram-webapp="true"] .launch-event-art,
+html[data-telegram-webapp="true"] .launch-trivia-art {
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+html[data-telegram-webapp="true"] .launch-continue-button {
+  bottom: 14px !important;
+  right: 14px !important;
+}
+
+html[data-telegram-webapp="true"] .launch-play-hit-area {
+  bottom: 3.5% !important;
+  left: 14% !important;
+  right: 14% !important;
+}
+
+/* 2. Chat Page */
+html[data-telegram-webapp="true"] .chat-reference-header {
+  aspect-ratio: auto !important;
+  min-height: calc(var(--tg-safe-top) + 98px) !important;
+  padding: calc(var(--tg-safe-top) + 16px) 22px 18px !important;
+}
+
+html[data-telegram-webapp="true"] .chat-atdf-stamp {
+  top: calc(var(--tg-safe-top) - 10px) !important;
+  right: 8px !important;
+}
+
+html[data-telegram-webapp="true"] .chat-safe {
+  padding-bottom: var(--chat-safe-bottom) !important;
+}
+
+/* 3. Leaderboard Page */
+html[data-telegram-webapp="true"] .leaderboard-hero {
+  aspect-ratio: auto !important;
+  min-height: calc(var(--tg-safe-top) + 295px) !important;
+}
+
+html[data-telegram-webapp="true"] .leaderboard-heading {
+  padding-top: calc(var(--tg-safe-top) + 12px) !important;
+}
+
+/* 4. Home Page */
+html[data-telegram-webapp="true"] .game-topbar {
+  padding-top: calc(var(--tg-safe-top) + 8px) !important;
+}
+
+html[data-telegram-webapp="true"] .home-reference-hero {
+  aspect-ratio: auto !important;
+  min-height: calc(var(--tg-safe-top) + 205px) !important;
+}
+
+html[data-telegram-webapp="true"] .home-tip-button {
+  top: calc(var(--tg-safe-top) + 8px) !important;
+}
+
+html[data-telegram-webapp="true"] .home-slogan {
+  top: calc(var(--tg-safe-top) + 54px) !important;
+}
+
+html[data-telegram-webapp="true"] .home-atdf-seal {
+  top: calc(var(--tg-safe-top) + 36px) !important;
+}
+
+html[data-telegram-webapp="true"] .home-safe {
+  padding-bottom: calc(var(--bottom-nav-bottom) + var(--bottom-nav-height) + 28px) !important;
+  scroll-padding-bottom: calc(var(--bottom-nav-bottom) + var(--bottom-nav-height) + 28px) !important;
+}
+
+/* 5. Profile Page (Me tab) */
+html[data-telegram-webapp="true"] .profile-reference-hero {
+  height: clamp(285px, calc(72vw + var(--tg-safe-top)), 340px) !important;
+}
+
+html[data-telegram-webapp="true"] .profile-settings-button {
+  top: calc(var(--tg-safe-top) + 8px) !important;
+}
+
+html[data-telegram-webapp="true"] .profile-seal {
+  top: calc(var(--tg-safe-top) - 10px) !important;
+}
+
+html[data-telegram-webapp="true"] .profile-safe {
+  padding-bottom: calc(var(--bottom-nav-height) + var(--bottom-nav-bottom) + 24px) !important;
+}
+
+/* 6. Settings Page */
+html[data-telegram-webapp="true"] .settings-safe {
+  padding-bottom: calc(var(--tg-safe-bottom) + 28px) !important;
+}
+
+html[data-telegram-webapp="true"] .settings-back {
+  top: calc(var(--tg-safe-top) + 10px) !important;
+}
+
+html[data-telegram-webapp="true"] .settings-panel header {
+  padding-top: calc(var(--tg-safe-top) + 16px) !important;
+}
+
+/* 7. Category Map Page */
+html[data-telegram-webapp="true"] .map-category-header {
+  top: calc(var(--tg-safe-top) + 10px) !important;
+}
+
+html[data-telegram-webapp="true"] .map-safe {
+  padding-top: calc(var(--tg-safe-top) + 86px) !important;
+  padding-bottom: calc(var(--tg-safe-bottom) + 102px) !important;
+}
+
+/* 8. Gameplay Quiz Page */
+html[data-telegram-webapp="true"] .game-play-safe {
+  padding-top: calc(var(--tg-safe-top) + 12px) !important;
+  padding-bottom: calc(var(--tg-safe-bottom) + 14px + var(--play-action-space)) !important;
+}
+
+/* 9. Onboarding & Modal Dialogs */
+html[data-telegram-webapp="true"] .game-safe.game-safe-compact {
+  padding-top: calc(var(--tg-safe-top) + 24px) !important;
+  padding-bottom: calc(var(--tg-safe-bottom) + 24px) !important;
+}
+
+html[data-telegram-webapp="true"] .age-prompt-backdrop,
+html[data-telegram-webapp="true"] .donation-modal,
+html[data-telegram-webapp="true"] .reward-gate-backdrop {
+  padding-top: calc(var(--tg-safe-top) + 12px);
+  padding-bottom: calc(var(--tg-safe-bottom) + 12px);
+}

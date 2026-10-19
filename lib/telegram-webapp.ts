@@ -24,6 +24,7 @@ interface TelegramInsets {
 
 export interface TelegramWebApp {
   version?: string;
+  platform?: string;
   initData: string;
   initDataUnsafe?: {
     user?: TelegramWebAppUser;
@@ -192,9 +193,22 @@ export function hasTelegramLaunchData() {
 }
 
 export function isTelegramMiniApp() {
-  const userAgent = typeof navigator === "undefined" ? "" : navigator.userAgent.toLowerCase();
-  const search = typeof window === "undefined" ? "" : window.location.search.toLowerCase();
-  return Boolean(getTelegramLaunchData()?.initData || userAgent.includes("telegram") || search.includes("tgwebapp"));
+  if (typeof window === "undefined") {
+    return false;
+  }
+  const userAgent = navigator.userAgent.toLowerCase();
+  const search = window.location.search.toLowerCase();
+  const hasTgObject = Boolean(
+    window.Telegram?.WebApp &&
+      (window.Telegram.WebApp.initData || window.Telegram.WebApp.version || window.Telegram.WebApp.platform)
+  );
+  return Boolean(
+    getTelegramLaunchData()?.initData ||
+      hasTgObject ||
+      userAgent.includes("telegram") ||
+      search.includes("tgwebapp") ||
+      search.includes("tgwebplatform")
+  );
 }
 
 export function getTelegramMiniAppUrl(startParam = "login") {
@@ -366,13 +380,21 @@ export function applyTelegramViewportVars() {
   root.dataset.telegramWebapp = "true";
 
   const viewportHeight = webApp?.viewportStableHeight || webApp?.viewportHeight || window.innerHeight;
-  const safeTop = Math.max(webApp?.safeAreaInset?.top ?? 0, webApp?.contentSafeAreaInset?.top ?? 0);
-  const safeBottom = Math.max(webApp?.safeAreaInset?.bottom ?? 0, webApp?.contentSafeAreaInset?.bottom ?? 0);
+  const contentTop = webApp?.contentSafeAreaInset?.top ?? 0;
+  const deviceTop = webApp?.safeAreaInset?.top ?? 0;
+  // In Telegram Mini App fullscreen mode, Telegram's overlay buttons (✕ Close and ˅ ⋮)
+  // float over the webview at the top. On mobile (Android/iOS), safe top must be
+  // at least 72px so content is never covered by Telegram's header bar.
+  const safeTop = Math.max(contentTop, deviceTop > 0 ? deviceTop + 44 : 0, 72);
+
+  const contentBottom = webApp?.contentSafeAreaInset?.bottom ?? 0;
+  const deviceBottom = webApp?.safeAreaInset?.bottom ?? 0;
+  const safeBottom = Math.max(contentBottom, deviceBottom, 16);
 
   root.style.setProperty("--tg-viewport-height", px(viewportHeight));
   root.style.setProperty("--tg-safe-top", px(safeTop));
   root.style.setProperty("--tg-safe-bottom", px(safeBottom));
-  root.style.setProperty("--game-topbar-y", "92px");
-  root.style.setProperty("--game-safe-top", "132px");
-  root.style.setProperty("--home-safe-top", "118px");
+  root.style.setProperty("--game-topbar-y", px(safeTop + 8));
+  root.style.setProperty("--game-safe-top", px(safeTop + 44));
+  root.style.setProperty("--home-safe-top", px(safeTop + 36));
 }
