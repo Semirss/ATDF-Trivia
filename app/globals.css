@@ -4897,6 +4897,107 @@ html[data-telegram-webapp="true"] .play-continue-dock {
   color: #61756c;
 }
 
+.age-prompt-backdrop {
+  background: rgba(0, 43, 69, 0.72);
+}
+
+.age-prompt-form {
+  max-width: 390px;
+}
+
+.age-prompt-title {
+  color: var(--atdf-navy) !important;
+  text-shadow: none !important;
+}
+
+.age-prompt-subtitle {
+  color: #60746b !important;
+  text-shadow: none !important;
+}
+
+.atdf-age-panel {
+  border: 1px solid rgba(105, 189, 67, 0.2);
+  color: var(--atdf-navy);
+  background:
+    linear-gradient(rgba(255, 253, 246, 0.86), rgba(248, 246, 232, 0.92)),
+    url("/visuals/profile-section-pattern-v1.jpg") center / cover no-repeat;
+  box-shadow:
+    0 8px 20px rgba(0, 43, 69, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
+}
+
+.atdf-age-display {
+  border: 2px solid rgba(105, 189, 67, 0.72);
+  background:
+    radial-gradient(circle at 34% 22%, rgba(255, 255, 255, 0.16), transparent 34%),
+    linear-gradient(145deg, #0b4653, var(--atdf-navy));
+  box-shadow:
+    0 9px 20px rgba(0, 43, 69, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.atdf-age-years {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.atdf-age-bubble {
+  display: grid;
+  place-items: center;
+  border: 3px solid #fffdf6;
+  color: var(--atdf-navy);
+  background: linear-gradient(145deg, #f7d77e, #f1c35f);
+  box-shadow:
+    0 0 0 4px rgba(105, 189, 67, 0.2),
+    0 8px 18px rgba(0, 43, 69, 0.18);
+}
+
+.atdf-age-bubble-label {
+  color: rgba(6, 47, 69, 0.62);
+}
+
+.atdf-age-limit {
+  color: #587068;
+}
+
+.age-slider.atdf-age-slider::-webkit-slider-thumb {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #fffdf6;
+  background: #69bd43;
+  box-shadow: 0 4px 13px rgba(0, 74, 49, 0.25);
+}
+
+.age-slider.atdf-age-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #fffdf6;
+  background: #69bd43;
+  box-shadow: 0 4px 13px rgba(0, 74, 49, 0.25);
+}
+
+.atdf-age-summary {
+  border: 1px solid rgba(38, 89, 66, 0.13);
+  background: rgba(255, 254, 249, 0.86);
+  box-shadow: 0 4px 11px rgba(0, 43, 69, 0.06), inset 0 1px 0 #fff;
+}
+
+.atdf-age-summary-label {
+  color: #568044;
+}
+
+.atdf-age-summary-value {
+  color: var(--atdf-navy);
+}
+
+.atdf-age-hint {
+  color: #315b45;
+  background: rgba(105, 189, 67, 0.15);
+}
+
+.atdf-age-hint svg {
+  color: #d89d25;
+}
+
 .home-category-grid .category-card-icon {
   width: clamp(35px, 10vw, 46px) !important;
   height: clamp(35px, 10vw, 46px) !important;

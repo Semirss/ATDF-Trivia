@@ -167,27 +167,27 @@ export default function OnboardingPage() {
                   className="onboarding-name-input h-14 w-full rounded-[20px] border px-4 text-center font-display text-xl font-black outline-none"
                 />
               ) : (
-                <div className="rounded-[24px] bg-white/70 p-4 shadow-bevel">
-                  <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-white/60 bg-gradient-to-b from-black to-black/88 text-white shadow-engine">
+                <div className="atdf-age-panel rounded-[24px] p-4">
+                  <div className="atdf-age-display mx-auto grid h-24 w-24 place-items-center rounded-full text-white">
                     <div>
                       <div className="font-display text-4xl font-black leading-none">{age}</div>
-                      <div className="text-[10px] font-black uppercase text-white/60">{t(language, "years")}</div>
+                      <div className="atdf-age-years text-[10px] font-black uppercase">{t(language, "years")}</div>
                     </div>
                   </div>
                   <div className="relative mt-5">
                     <div
-                      className="absolute -top-3 z-10 h-[72px] w-[72px] -translate-x-1/2 rounded-full border-2 border-white bg-honey text-ink shadow-engine transition-all"
+                      className="atdf-age-bubble absolute -top-3 z-10 h-[72px] w-[72px] -translate-x-1/2 rounded-full transition-all"
                       style={{ left: `${bubblePercent}%` }}
                     >
                       <div className="grid h-full place-items-center">
                         <div className="text-center">
                           <div className="font-display text-3xl font-black leading-none">{age}</div>
-                          <div className="text-[10px] font-black uppercase text-black/55">{t(language, "age")}</div>
+                          <div className="atdf-age-bubble-label text-[10px] font-black uppercase">{t(language, "age")}</div>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 pt-16">
-                      <span className="text-xs font-black text-black/45">6</span>
+                      <span className="atdf-age-limit text-xs font-black">6</span>
                       <input
                         value={age}
                         onChange={(event) => setAge(Number(event.target.value))}
@@ -195,20 +195,20 @@ export default function OnboardingPage() {
                         type="range"
                         min={6}
                         max={99}
-                        className="age-slider h-2 flex-1 appearance-none rounded-full bg-transparent"
+                        className="age-slider atdf-age-slider h-2 flex-1 appearance-none rounded-full bg-transparent"
                         style={{
-                          background: `linear-gradient(90deg, #f2b84b 0%, #f2b84b ${agePercent}%, rgba(20,20,20,0.82) ${agePercent}%, rgba(20,20,20,0.82) 100%)`
+                          background: `linear-gradient(90deg, #69bd43 0%, #69bd43 ${agePercent}%, rgba(6,47,69,0.22) ${agePercent}%, rgba(6,47,69,0.22) 100%)`
                         }}
                       />
-                      <span className="text-xs font-black text-black/45">99</span>
+                      <span className="atdf-age-limit text-xs font-black">99</span>
                     </div>
                   </div>
-                  <div className="mt-3 grid gap-2 rounded-[18px] bg-white/80 px-4 py-3 text-left shadow-sm">
-                    <div className="text-[10px] font-black uppercase tracking-[0.18em] text-black/45">{t(language, "selectedAge")}</div>
-                    <div className="text-lg font-black">{age} {t(language, "yearsOld")}</div>
+                  <div className="atdf-age-summary mt-3 grid gap-2 rounded-[18px] px-4 py-3 text-left">
+                    <div className="atdf-age-summary-label text-[10px] font-black uppercase tracking-[0.18em]">{t(language, "selectedAge")}</div>
+                    <div className="atdf-age-summary-value text-lg font-black">{age} {t(language, "yearsOld")}</div>
                   </div>
-                  <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-honey/24 px-3 py-1 text-xs font-black uppercase text-black/62">
-                    <Sparkles className="h-3.5 w-3.5 text-ember" />
+                  <div className="atdf-age-hint mt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-black uppercase">
+                    <Sparkles className="h-3.5 w-3.5" />
                     {t(language, "slideToSelect")}
                   </div>
                 </div>
