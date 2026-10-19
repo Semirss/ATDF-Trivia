@@ -477,7 +477,8 @@ a {
 
 /* The inline first render exists for hydration. Hide separate stage chrome
    immediately, before the splash is portaled to the stage root. */
-.phone-stage:has(.play-intro-scene) .bottom-nav {
+.phone-stage:has(.play-intro-scene) .bottom-nav,
+.phone-stage:has(.play-intro-scene) .game-topbar {
   visibility: hidden;
   pointer-events: none;
 }
@@ -1701,7 +1702,7 @@ html[data-telegram-webapp="true"] .play-intro-scene.launch-sequence {
 
 .launch-trivia-art {
   z-index: 2;
-  object-fit: contain;
+  object-fit: fill;
   object-position: center;
 }
 
@@ -2099,23 +2100,24 @@ body {
 .home-tip-button {
   position: absolute;
   z-index: 5;
-  top: 18px;
+  top: 10px;
   right: 14px;
   display: inline-flex;
-  min-width: 76px;
-  height: 38px;
+  min-width: 64px;
+  height: 30px;
+  padding: 0 10px;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 5px;
   border: 0;
-  border-radius: 22px;
+  border-radius: 18px;
   color: #0a2b3d;
   background: #7bc943;
-  box-shadow: 0 6px 14px rgba(0, 25, 40, 0.18);
-  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0, 25, 40, 0.16);
+  font-size: 11.5px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .home-slogan {
@@ -2231,6 +2233,7 @@ body {
   flex: 0 0 auto;
   place-items: center;
   border-radius: 12px;
+  overflow: hidden;
   color: #51718d;
   background: #dfecf7;
   font-size: 17px;
@@ -4496,12 +4499,20 @@ html[data-telegram-webapp="true"] .play-continue-dock {
   height: 52px;
   border: 2px solid rgba(255, 255, 255, 0.92);
   border-radius: 16px;
+  overflow: hidden;
   color: #174a5e;
   background:
     linear-gradient(145deg, rgba(232, 246, 225, 0.94), rgba(207, 229, 218, 0.96)),
     url("/visuals/profile-card-light-v1.jpg") center / cover no-repeat;
   box-shadow: 0 4px 10px rgba(16, 58, 55, 0.13);
   font-size: 20px;
+}
+
+.home-player-initial img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .home-progress-copy {
@@ -5108,7 +5119,7 @@ html[data-telegram-webapp="true"] .launch-event-art {
 }
 
 html[data-telegram-webapp="true"] .launch-trivia-art {
-  object-fit: contain !important;
+  object-fit: fill !important;
   object-position: center !important;
 }
 
@@ -5154,7 +5165,7 @@ html[data-telegram-webapp="true"] .home-reference-hero {
 }
 
 html[data-telegram-webapp="true"] .home-tip-button {
-  top: calc(var(--tg-safe-top) + 8px) !important;
+  top: calc(var(--tg-safe-top) + 3px) !important;
 }
 
 html[data-telegram-webapp="true"] .home-slogan {

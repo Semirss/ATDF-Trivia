@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -32,12 +33,14 @@ export default function HomePage() {
   const [introChecked, setIntroChecked] = useState(false);
   const [isIntroLoading, setIsIntroLoading] = useState(false);
   const [donationOpen, setDonationOpen] = useState(false);
+  const [avatarFailed, setAvatarFailed] = useState(false);
   const categories = useCategories();
   const contentLoaded = useContentStore((state) => state.isLoaded);
   const contentError = useContentStore((state) => state.error);
   const levels = useContentStore((state) => state.levels);
   const name = usePlayerStore((state) => state.name);
   const playerId = usePlayerStore((state) => state.playerId);
+  const avatarUrl = usePlayerStore((state) => state.avatarUrl);
   const accountEmail = usePlayerStore((state) => state.accountEmail);
   const telegramPhone = usePlayerStore((state) => state.telegramPhone);
   const source = usePlayerStore((state) => state.source);
@@ -52,6 +55,10 @@ export default function HomePage() {
   const totalLevels = levels.filter((level) => level.isActive).length;
   const completionPercent = totalLevels > 0 ? Math.min(100, Math.round((completedLevels / totalLevels) * 100)) : 0;
   const displayName = name?.trim().split(/\s+/)[0] || t(language, "newChallenger");
+
+  useEffect(() => {
+    setAvatarFailed(false);
+  }, [avatarUrl]);
 
   useEffect(() => {
     setShowIntro(shouldShowHomeSplash());
@@ -126,7 +133,7 @@ export default function HomePage() {
 
         <section className="home-reference-hero" aria-label={`${t(language, "sloganLearn")}, ${t(language, "sloganPlay")}, ${t(language, "sloganBuildStronger")} ${t(language, "sloganAfrica")}`}>
           <button type="button" onClick={() => setDonationOpen(true)} className="home-tip-button">
-            <Lightbulb className="h-5 w-5" strokeWidth={2.4} />
+            <Lightbulb className="h-4 w-4" strokeWidth={2.4} />
             <span>{t(language, "tipAction")}</span>
           </button>
           <p className="home-slogan">
@@ -159,7 +166,18 @@ export default function HomePage() {
             onClick={() => !hasProgressLogin && setVerificationOpen(true)}
             className="home-progress-card"
           >
-            <span className="home-player-initial">{displayName.charAt(0).toUpperCase()}</span>
+            <span className="home-player-initial">
+              {avatarUrl && !avatarFailed ? (
+                <img
+                  src={avatarUrl}
+                  alt={displayName}
+                  className="h-full w-full object-cover"
+                  onError={() => setAvatarFailed(true)}
+                />
+              ) : (
+                Array.from(displayName.trim())[0]?.toUpperCase() || "?"
+              )}
+            </span>
             <span className="home-progress-copy">
               <strong>{displayName}</strong>
               <small>{hasVerification ? t(language, "verifiedPlayer") : t(language, "continueLearningJourney")}</small>
